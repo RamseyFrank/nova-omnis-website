@@ -193,6 +193,7 @@ img {
   height: 100%;
   aspect-ratio: 1;
   object-fit: contain;
+  border-radius: inherit;
 }
 
 /* Temporary placeholder imagery is CSS only; no image assets are generated. */
@@ -202,6 +203,7 @@ img {
   width: 100%;
   height: 100%;
   aspect-ratio: 1;
+  border-radius: inherit;
   background: var(--surface);
   color: #7b7e75;
   font-size: 11px;
