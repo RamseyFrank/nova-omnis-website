@@ -1,0 +1,16 @@
+[
+  {
+    "id": "dark-angel-marine",
+    "name": "Dark Angel Marine",
+    "price": 5,
+    "description": "",
+    "images": [
+      "assets/images/products/dark-angel-marine/01.webp",
+      "assets/images/products/dark-angel-marine/02.webp",
+      "assets/images/products/dark-angel-marine/03.webp",
+      "assets/images/products/dark-angel-marine/04.webp",
+      "assets/images/products/dark-angel-marine/05.webp",
+      "assets/images/products/dark-angel-marine/06.webp"
+    ]
+  }
+]

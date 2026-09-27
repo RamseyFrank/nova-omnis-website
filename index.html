@@ -4,10 +4,100 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Nova Omnis</title>
+    <meta name="description" content="Explore the Nova Omnis collection.">
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/main.js" defer></script>
   </head>
   <body>
-    <main>Nova Omnis</main>
+    <header class="site-header page-width">
+      <a class="wordmark" href="./" aria-label="Nova Omnis home">NOVA OMNIS</a>
+      <button class="cart-trigger" id="cart-trigger" type="button" aria-haspopup="dialog" aria-controls="cart-dialog" aria-label="Cart, 0 items">
+        CART (<span id="cart-count">0</span>)
+      </button>
+    </header>
+
+    <main class="catalog page-width">
+      <h1 class="visually-hidden">All products</h1>
+      <p class="catalog-status" id="catalog-status" role="status">Loading products…</p>
+      <ul class="product-grid" id="product-grid" aria-label="Products"></ul>
+      <noscript><p>Please enable JavaScript to browse products and use the cart.</p></noscript>
+    </main>
+
+    <p class="visually-hidden" id="cart-status" role="status" aria-atomic="true"></p>
+
+    <dialog class="product-dialog" id="product-dialog" aria-labelledby="detail-name">
+      <div class="dialog-header">
+        <span class="dialog-label">Product details</span>
+        <button class="close-button" type="button" data-close-dialog autofocus aria-label="Close product details">CLOSE <span aria-hidden="true">×</span></button>
+      </div>
+      <div class="detail-layout">
+        <div class="detail-gallery">
+          <div class="product-media" id="detail-image"></div>
+          <div class="detail-thumbnails" id="detail-thumbnails" role="group" aria-label="Product image angles"></div>
+        </div>
+        <div class="detail-info">
+          <h2 id="detail-name"></h2>
+          <p class="detail-price" id="detail-price"></p>
+          <p class="detail-description" id="detail-description"></p>
+          <button class="primary-button" id="detail-add" type="button">ADD TO CART</button>
+          <p class="detail-status" id="detail-status" role="status" aria-atomic="true"></p>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="cart-dialog" id="cart-dialog" aria-labelledby="cart-heading">
+      <div class="cart-panel">
+        <div class="dialog-header">
+          <h2 class="dialog-label" id="cart-heading">Your cart (<span id="drawer-count">0</span>)</h2>
+          <button class="close-button" type="button" data-close-dialog autofocus aria-label="Close cart">CLOSE <span aria-hidden="true">×</span></button>
+        </div>
+        <div class="cart-content">
+          <div class="cart-empty" id="cart-empty">
+            <p>Your cart is empty.</p>
+            <button class="text-button" type="button" data-close-dialog>Continue browsing</button>
+          </div>
+          <ul class="cart-items" id="cart-items" aria-label="Cart items"></ul>
+        </div>
+        <div class="cart-footer">
+          <div class="subtotal-row"><span>Subtotal</span><strong id="cart-subtotal">$0.00</strong></div>
+          <button class="primary-button" id="checkout-button" type="button" disabled aria-describedby="checkout-note">CHECKOUT</button>
+          <p class="checkout-note" id="checkout-note">Checkout is not available in this preview.</p>
+          <p class="visually-hidden" id="drawer-status" role="status" aria-atomic="true"></p>
+        </div>
+      </div>
+    </dialog>
+
+    <template id="product-card-template">
+      <li>
+        <article class="product-card">
+          <button class="product-media product-image-button" type="button" data-open-product aria-haspopup="dialog" aria-controls="product-dialog"></button>
+          <div class="product-info">
+            <div class="product-copy">
+              <h2><button class="product-name" type="button" data-open-product aria-haspopup="dialog" aria-controls="product-dialog"></button></h2>
+              <p class="product-price"></p>
+            </div>
+            <button class="quick-add" type="button"><span aria-hidden="true">+</span></button>
+          </div>
+        </article>
+      </li>
+    </template>
+
+    <template id="cart-item-template">
+      <li class="cart-item">
+        <div class="cart-item-heading">
+          <h3 class="cart-item-name"></h3>
+          <p class="cart-item-total"></p>
+        </div>
+        <p class="cart-item-price"></p>
+        <div class="cart-item-controls">
+          <div class="quantity-control" role="group">
+            <button type="button" data-quantity="-1">−</button>
+            <span class="item-quantity"></span>
+            <button type="button" data-quantity="1">+</button>
+          </div>
+          <button class="text-button remove-item" type="button">Remove</button>
+        </div>
+      </li>
+    </template>
   </body>
 </html>
