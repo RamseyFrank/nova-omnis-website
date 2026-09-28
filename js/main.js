@@ -73,11 +73,6 @@ function showProductImage(product, index) {
 function resetAddFeedback(button) {
   clearTimeout(feedbackTimers.get(button));
   button.classList.remove("is-added");
-  if (button.classList.contains("quick-add")) {
-    button.firstElementChild.textContent = "+";
-  } else {
-    button.textContent = "ADD TO CART";
-  }
 }
 
 function openProduct(product) {
@@ -120,11 +115,6 @@ function addToCart(product, button) {
 
   resetAddFeedback(button);
   button.classList.add("is-added");
-  if (button.classList.contains("quick-add")) {
-    button.firstElementChild.textContent = "✓";
-  } else {
-    button.textContent = "ADDED ✓";
-  }
   feedbackTimers.set(button, setTimeout(() => resetAddFeedback(button), 1000));
 
   const count = cartCount();
