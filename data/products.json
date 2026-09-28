@@ -14,6 +14,34 @@
     ]
   },
   {
+    "id": "carnifex",
+    "name": "Carnifex",
+    "price": 5,
+    "description": "",
+    "images": [
+      "assets/images/products/carnifex/01.webp",
+      "assets/images/products/carnifex/02.webp",
+      "assets/images/products/carnifex/03.webp",
+      "assets/images/products/carnifex/04.webp",
+      "assets/images/products/carnifex/05.webp",
+      "assets/images/products/carnifex/06.webp"
+    ]
+  },
+  {
+    "id": "classic-marine",
+    "name": "Classic Marine",
+    "price": 5,
+    "description": "",
+    "images": [
+      "assets/images/products/classic-marine/01.webp",
+      "assets/images/products/classic-marine/02.webp",
+      "assets/images/products/classic-marine/03.webp",
+      "assets/images/products/classic-marine/04.webp",
+      "assets/images/products/classic-marine/05.webp",
+      "assets/images/products/classic-marine/06.webp"
+    ]
+  },
+  {
     "id": "corvus-marine",
     "name": "Corvus Marine",
     "price": 5,
@@ -25,6 +53,112 @@
       "assets/images/products/corvus-marine/04.webp",
       "assets/images/products/corvus-marine/05.webp",
       "assets/images/products/corvus-marine/06.webp"
+    ]
+  },
+  {
+    "id": "greyknight",
+    "name": "Greyknight",
+    "price": 5,
+    "description": "",
+    "images": [
+      "assets/images/products/greyknight/01.webp",
+      "assets/images/products/greyknight/02.webp",
+      "assets/images/products/greyknight/03.webp",
+      "assets/images/products/greyknight/04.webp",
+      "assets/images/products/greyknight/05.webp",
+      "assets/images/products/greyknight/06.webp"
+    ]
+  },
+  {
+    "id": "imperial-fist-with-shield",
+    "name": "Imperial Fist with Shield",
+    "price": 5,
+    "description": "",
+    "images": [
+      "assets/images/products/imperial-fist-with-shield/01.webp",
+      "assets/images/products/imperial-fist-with-shield/02.webp",
+      "assets/images/products/imperial-fist-with-shield/03.webp",
+      "assets/images/products/imperial-fist-with-shield/04.webp",
+      "assets/images/products/imperial-fist-with-shield/05.webp",
+      "assets/images/products/imperial-fist-with-shield/06.webp"
+    ]
+  },
+  {
+    "id": "imperial-fist-with-shield-and-plume",
+    "name": "Imperial Fist with Shield and Plume",
+    "price": 5,
+    "description": "",
+    "images": [
+      "assets/images/products/imperial-fist-with-shield-and-plume/01.webp",
+      "assets/images/products/imperial-fist-with-shield-and-plume/02.webp",
+      "assets/images/products/imperial-fist-with-shield-and-plume/03.webp",
+      "assets/images/products/imperial-fist-with-shield-and-plume/04.webp",
+      "assets/images/products/imperial-fist-with-shield-and-plume/05.webp",
+      "assets/images/products/imperial-fist-with-shield-and-plume/06.webp"
+    ]
+  },
+  {
+    "id": "krieg-soldier",
+    "name": "Krieg Soldier",
+    "price": 5,
+    "description": "",
+    "images": [
+      "assets/images/products/krieg-soldier/01.webp",
+      "assets/images/products/krieg-soldier/02.webp",
+      "assets/images/products/krieg-soldier/03.webp",
+      "assets/images/products/krieg-soldier/04.webp",
+      "assets/images/products/krieg-soldier/05.webp"
+    ]
+  },
+  {
+    "id": "mk7-jump-pack-marine",
+    "name": "MK7 Jump pack Marine",
+    "price": 5,
+    "description": "",
+    "images": [
+      "assets/images/products/mk7-jump-pack-marine/01.webp",
+      "assets/images/products/mk7-jump-pack-marine/02.webp",
+      "assets/images/products/mk7-jump-pack-marine/03.webp",
+      "assets/images/products/mk7-jump-pack-marine/04.webp",
+      "assets/images/products/mk7-jump-pack-marine/05.webp",
+      "assets/images/products/mk7-jump-pack-marine/06.webp"
+    ]
+  },
+  {
+    "id": "sister-of-battle",
+    "name": "Sister of Battle",
+    "price": 5,
+    "description": "",
+    "images": [
+      "assets/images/products/sister-of-battle/01.webp",
+      "assets/images/products/sister-of-battle/02.webp",
+      "assets/images/products/sister-of-battle/03.webp",
+      "assets/images/products/sister-of-battle/04.webp",
+      "assets/images/products/sister-of-battle/05.webp",
+      "assets/images/products/sister-of-battle/06.webp"
+    ]
+  },
+  {
+    "id": "thunder-warrior-marine",
+    "name": "Thunder Warrior Marine",
+    "price": 5,
+    "description": "",
+    "images": [
+      "assets/images/products/thunder-warrior-marine/01.webp",
+      "assets/images/products/thunder-warrior-marine/02.webp",
+      "assets/images/products/thunder-warrior-marine/03.webp",
+      "assets/images/products/thunder-warrior-marine/04.webp",
+      "assets/images/products/thunder-warrior-marine/05.webp",
+      "assets/images/products/thunder-warrior-marine/06.webp"
+    ]
+  },
+  {
+    "id": "world-eater-marine",
+    "name": "World Eater Marine",
+    "price": 5,
+    "description": "",
+    "images": [
+      "assets/images/products/world-eater-marine/01.webp"
     ]
   }
 ]
