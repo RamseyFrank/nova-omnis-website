@@ -12,5 +12,19 @@
       "assets/images/products/dark-angel-marine/05.webp",
       "assets/images/products/dark-angel-marine/06.webp"
     ]
+  },
+  {
+    "id": "corvus-marine",
+    "name": "Corvus Marine",
+    "price": 5,
+    "description": "",
+    "images": [
+      "assets/images/products/corvus-marine/01.webp",
+      "assets/images/products/corvus-marine/02.webp",
+      "assets/images/products/corvus-marine/03.webp",
+      "assets/images/products/corvus-marine/04.webp",
+      "assets/images/products/corvus-marine/05.webp",
+      "assets/images/products/corvus-marine/06.webp"
+    ]
   }
 ]
