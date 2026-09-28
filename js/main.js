@@ -139,7 +139,9 @@ function cartCount() {
 
 function updateCart() {
   const count = cartCount();
-  document.querySelector("#cart-count").textContent = count;
+  const countBadge = document.querySelector("#cart-count");
+  countBadge.textContent = count;
+  countBadge.hidden = count === 0;
   document.querySelector("#drawer-count").textContent = count;
   cartTrigger.setAttribute("aria-label", `Cart, ${count} ${count === 1 ? "item" : "items"}`);
   document.querySelector("#cart-empty").hidden = count > 0;
@@ -179,6 +181,7 @@ function renderCartItems() {
     const product = products.get(id);
     const item = template.content.cloneNode(true);
     item.querySelector(".cart-item").dataset.productId = id;
+    item.querySelector(".cart-item-image").append(product.images.length ? makeImage(product, 0, true) : makePlaceholder());
     item.querySelector(".cart-item-name").textContent = product.name;
     item.querySelector(".cart-item-price").textContent = `${formatPrice(product.price)} each`;
     item.querySelector(".cart-item-total").textContent = formatPrice(Math.round(product.price * 100) * quantity / 100);

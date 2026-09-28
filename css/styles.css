@@ -483,8 +483,29 @@ dialog::backdrop {
 }
 
 .cart-item {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: start;
   padding-block: 24px;
   border-bottom: 1px solid var(--line);
+}
+
+.cart-item-image {
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  border-radius: var(--radius-small);
+  background: var(--surface);
+}
+
+.cart-item-image img {
+  height: 100%;
+  object-fit: contain;
+}
+
+.cart-item-info {
+  min-width: 0;
 }
 
 .cart-item-heading {
@@ -511,6 +532,7 @@ dialog::backdrop {
 }
 
 .cart-item-controls {
+  grid-column: 1 / -1;
   display: flex;
   align-items: center;
   justify-content: space-between;

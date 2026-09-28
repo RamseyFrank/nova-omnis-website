@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Nova Omnis</title>
     <meta name="description" content="Explore the Nova Omnis collection.">
-    <link rel="stylesheet" href="css/styles.css?v=20260928-4">
-    <script src="js/main.js?v=20260928-1" defer></script>
+    <link rel="stylesheet" href="css/styles.css?v=20260928-5">
+    <script src="js/main.js?v=20260928-2" defer></script>
   </head>
   <body>
     <header class="site-header page-width">
@@ -17,7 +17,7 @@
           <circle cx="9" cy="20" r="1" />
           <circle cx="18" cy="20" r="1" />
         </svg>
-        <span id="cart-count" aria-hidden="true">0</span>
+        <span id="cart-count" aria-hidden="true" hidden>0</span>
       </button>
     </header>
 
@@ -89,11 +89,14 @@
 
     <template id="cart-item-template">
       <li class="cart-item">
-        <div class="cart-item-heading">
-          <h3 class="cart-item-name"></h3>
-          <p class="cart-item-total"></p>
+        <div class="cart-item-image"></div>
+        <div class="cart-item-info">
+          <div class="cart-item-heading">
+            <h3 class="cart-item-name"></h3>
+            <p class="cart-item-total"></p>
+          </div>
+          <p class="cart-item-price"></p>
         </div>
-        <p class="cart-item-price"></p>
         <div class="cart-item-controls">
           <div class="quantity-control" role="group">
             <button type="button" data-quantity="-1">−</button>
