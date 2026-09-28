@@ -302,6 +302,15 @@ img {
   border-color: #d0dfd4;
 }
 
+.quick-add.is-added {
+  flex: 0 0 auto;
+  width: auto;
+  padding-inline: 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
 dialog {
   color: inherit;
   background: var(--panel);
@@ -540,26 +549,6 @@ dialog::backdrop {
   margin-top: 16px;
 }
 
-.quantity-control {
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-}
-
-.quantity-control button {
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  font-size: 18px;
-}
-
-.item-quantity {
-  min-width: 28px;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-}
-
 .text-button {
   min-height: 44px;
   padding: 0;
@@ -587,7 +576,7 @@ dialog::backdrop {
   font-weight: 500;
 }
 
-.primary-button:disabled {
+.primary-button:disabled:not(.is-added) {
   color: #fff;
   background: #484c46;
 }
@@ -606,8 +595,7 @@ dialog::backdrop {
     color: var(--muted);
   }
 
-  .quick-add:hover,
-  .quantity-control button:hover {
+  .quick-add:hover:not(:disabled) {
     background: var(--surface);
   }
 

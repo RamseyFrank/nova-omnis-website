@@ -120,10 +120,13 @@ Satoshi is not downloaded from external services; only the wordmark font is remo
 - The grid uses two columns on desktop and tablet, and one column at widths of
   480px or less. The centered page is capped at 1280px, with fluid square images.
 - The plus button adds one item without opening a dialog. Product images and
-  names open the detail overlay. The cart icon opens the quantity controls and subtotal.
+  names open the detail overlay. The cart icon opens the product list and subtotal.
+- Each product can be added only once per cart. Its add buttons stay disabled
+  and sage with "Added to cart" until it is removed. Different products can be
+  added together; cart rows provide Remove without quantity controls.
 - The cart icon shows a count only when items are present. Each cart row includes
   the product's cover image beside its name, price, and total.
 - The cart stays in memory for the current page session and resets on refresh.
-  Prices are displayed in USD. Reducing a quantity to zero removes the item.
+  Prices are displayed in USD. Removing a product enables its add buttons again.
 - CHECKOUT is a disabled visual placeholder. No payment or checkout service is
   connected. Overlays close via the close button, Escape, or the backdrop.

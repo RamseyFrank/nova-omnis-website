@@ -12,8 +12,7 @@ const detailStatus = document.querySelector("#detail-status");
 // Prices in the current data are displayed as USD for this storefront prototype.
 const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 const products = new Map();
-const cart = new Map();
-const feedbackTimers = new WeakMap();
+const cart = new Set();
 let activeProduct = null;
 
 function formatPrice(amount) {
@@ -55,8 +54,9 @@ function renderCatalog() {
     card.querySelectorAll("[data-open-product]").forEach((button) => {
       button.addEventListener("click", () => openProduct(product));
     });
-    quickAdd.setAttribute("aria-label", `Add one ${product.name} to cart`);
-    quickAdd.addEventListener("click", () => addToCart(product, quickAdd));
+    quickAdd.dataset.productId = product.id;
+    syncAddButton(quickAdd, product);
+    quickAdd.addEventListener("click", () => addToCart(product));
     fragment.append(card);
   }
 
@@ -70,9 +70,16 @@ function showProductImage(product, index) {
   });
 }
 
-function resetAddFeedback(button) {
-  clearTimeout(feedbackTimers.get(button));
-  button.classList.remove("is-added");
+function syncAddButton(button, product) {
+  const added = cart.has(product.id);
+  button.disabled = added;
+  button.classList.toggle("is-added", added);
+  button.setAttribute("aria-label", added ? `${product.name} added to cart` : `Add ${product.name} to cart`);
+  if (button.classList.contains("quick-add")) {
+    button.firstElementChild.textContent = added ? "Added to cart" : "+";
+  } else {
+    button.textContent = added ? "Added to cart" : "ADD TO CART";
+  }
 }
 
 function openProduct(product) {
@@ -83,8 +90,7 @@ function openProduct(product) {
   description.textContent = product.description;
   description.hidden = !product.description;
   detailStatus.textContent = "";
-  resetAddFeedback(detailAdd);
-  detailAdd.setAttribute("aria-label", `Add one ${product.name} to cart`);
+  syncAddButton(detailAdd, product);
 
   const thumbnails = document.querySelector("#detail-thumbnails");
   thumbnails.replaceChildren();
@@ -109,13 +115,10 @@ function openProduct(product) {
   productDialog.scrollTop = 0;
 }
 
-function addToCart(product, button) {
-  cart.set(product.id, (cart.get(product.id) || 0) + 1);
+function addToCart(product) {
+  if (cart.has(product.id)) return;
+  cart.add(product.id);
   updateCart();
-
-  resetAddFeedback(button);
-  button.classList.add("is-added");
-  feedbackTimers.set(button, setTimeout(() => resetAddFeedback(button), 1000));
 
   const count = cartCount();
   const message = `${product.name} added. ${count} ${count === 1 ? "item" : "items"} in your cart.`;
@@ -124,7 +127,7 @@ function addToCart(product, button) {
 }
 
 function cartCount() {
-  return [...cart.values()].reduce((total, quantity) => total + quantity, 0);
+  return cart.size;
 }
 
 function updateCart() {
@@ -139,62 +142,54 @@ function updateCart() {
 
   // Use integer cents for the subtotal to avoid floating-point rounding drift.
   let subtotalCents = 0;
-  for (const [id, quantity] of cart) {
-    subtotalCents += Math.round(products.get(id).price * 100) * quantity;
+  for (const id of cart) {
+    subtotalCents += Math.round(products.get(id).price * 100);
   }
   document.querySelector("#cart-subtotal").textContent = formatPrice(subtotalCents / 100);
+  productGrid.querySelectorAll(".quick-add").forEach((button) => {
+    syncAddButton(button, products.get(button.dataset.productId));
+  });
+  if (activeProduct) syncAddButton(detailAdd, activeProduct);
   if (cartDialog.open) renderCartItems();
 }
 
-function changeQuantity(id, change) {
+function removeFromCart(id) {
   const product = products.get(id);
-  const quantity = Math.max(0, (cart.get(id) || 0) + change);
-  if (quantity) cart.set(id, quantity);
-  else cart.delete(id);
+  cart.delete(id);
   updateCart();
-  document.querySelector("#drawer-status").textContent = quantity
-    ? `${product.name}: ${quantity}. Subtotal ${document.querySelector("#cart-subtotal").textContent}.`
-    : `${product.name} removed from your cart.`;
+  document.querySelector("#drawer-status").textContent = `${product.name} removed from your cart.`;
 }
 
 function renderCartItems() {
-  // Preserve keyboard focus when quantity changes rebuild the list.
+  // Preserve keyboard focus when removing an item rebuilds the list.
   const focused = document.activeElement;
   const focusedRow = focused.closest(".cart-item");
   const focusedId = focusedRow?.dataset.productId;
   const focusedIndex = [...cartItems.children].indexOf(focusedRow);
-  const focusedControl = focused.dataset.quantity || (focused.classList.contains("remove-item") ? "remove" : null);
+  const focusedRemove = focused.classList.contains("remove-item");
   const template = document.querySelector("#cart-item-template");
   const fragment = document.createDocumentFragment();
 
-  for (const [id, quantity] of cart) {
+  for (const id of cart) {
     const product = products.get(id);
     const item = template.content.cloneNode(true);
     item.querySelector(".cart-item").dataset.productId = id;
     item.querySelector(".cart-item-image").append(product.images.length ? makeImage(product, 0, true) : makePlaceholder());
     item.querySelector(".cart-item-name").textContent = product.name;
     item.querySelector(".cart-item-price").textContent = `${formatPrice(product.price)} each`;
-    item.querySelector(".cart-item-total").textContent = formatPrice(Math.round(product.price * 100) * quantity / 100);
-    item.querySelector(".item-quantity").textContent = quantity;
-    item.querySelector(".quantity-control").setAttribute("aria-label", `Quantity for ${product.name}`);
-    item.querySelectorAll("[data-quantity]").forEach((button) => {
-      const change = Number(button.dataset.quantity);
-      button.setAttribute("aria-label", `${change > 0 ? "Increase" : "Decrease"} quantity of ${product.name}`);
-      button.addEventListener("click", () => changeQuantity(id, change));
-    });
+    item.querySelector(".cart-item-total").textContent = formatPrice(product.price);
     const remove = item.querySelector(".remove-item");
     remove.setAttribute("aria-label", `Remove ${product.name} from cart`);
-    remove.addEventListener("click", () => changeQuantity(id, -quantity));
+    remove.addEventListener("click", () => removeFromCart(id));
     fragment.append(item);
   }
 
   cartItems.replaceChildren(fragment);
-  if (focusedId && focusedControl) {
+  if (focusedId && focusedRemove) {
     const rows = [...cartItems.children];
     const row = rows.find((item) => item.dataset.productId === focusedId)
       || rows[Math.min(focusedIndex, rows.length - 1)];
-    const control = focusedControl === "remove" ? ".remove-item" : `[data-quantity="${focusedControl}"]`;
-    (row?.querySelector(control) || document.querySelector("#cart-empty button")).focus();
+    (row?.querySelector(".remove-item") || document.querySelector("#cart-empty button")).focus();
   }
 }
 
@@ -205,7 +200,7 @@ cartTrigger.addEventListener("click", () => {
 });
 
 detailAdd.addEventListener("click", () => {
-  if (activeProduct) addToCart(activeProduct, detailAdd);
+  if (activeProduct) addToCart(activeProduct);
 });
 
 // Native dialogs provide Escape handling, focus trapping, and focus restoration.
