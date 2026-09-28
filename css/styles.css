@@ -207,7 +207,7 @@ img {
   border-radius: inherit;
 }
 
-/* Temporary placeholder imagery is CSS only; no image assets are generated. */
+/* Fallback for missing or unavailable product images. */
 .placeholder-image {
   display: grid;
   place-items: center;

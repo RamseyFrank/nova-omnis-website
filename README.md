@@ -67,8 +67,8 @@ for these commands; no `npm install` is required. The deployed site stays static
 
 Edit its source JSON or images and run `npm run catalog:build` again. To hide a
 product, change its status back to `draft` and rebuild. Keep IDs stable: the cart
-uses them to identify products. There is no ten-product limit; preview placeholders
-automatically disappear as the real catalog fills up.
+uses them to identify products. There is no ten-product limit; the storefront
+displays only published products, with no placeholder cards.
 
 ### Validation and automation
 
@@ -112,9 +112,8 @@ Satoshi is not downloaded from external services; only the wordmark font is remo
 - Dark Angel Marine loads from the generated `data/products.json` and
   uses its first WebP on the homepage. All six existing angles are available in
   the product overlay. Its description remains empty until real copy is added.
-- Clearly marked temporary products fill the grid up to ten items while the real
-  catalog is small. Their $5 prices are sample data and their image areas are CSS
-  blocks. Each published product automatically replaces one placeholder.
+- The grid displays only products from the generated catalog. An empty catalog
+  shows "No products available yet." instead of placeholder cards.
 - The grid uses two columns on desktop and tablet, and one column at widths of
   480px or less. The centered page is capped at 1280px, with fluid square images.
 - The plus button adds one item without opening a dialog. Product images and

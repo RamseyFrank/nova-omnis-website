@@ -16,26 +16,11 @@ const cart = new Map();
 const feedbackTimers = new WeakMap();
 let activeProduct = null;
 
-// Fill the prototype layout until there are ten real products; never cap the catalog.
-function makePreviewProducts(realProducts) {
-  return Array.from({ length: Math.max(0, 10 - realProducts.length) }, (_, index) => {
-    const number = String(realProducts.length + index + 1).padStart(2, "0");
-    return {
-      id: `preview:${number}`,
-      name: `Placeholder ${number}`,
-      price: 5,
-      description: "Temporary product used to preview the catalog layout.",
-      images: [],
-      placeholder: true,
-    };
-  });
-}
-
 function formatPrice(amount) {
   return currency.format(amount);
 }
 
-function makePlaceholder(label = "PLACEHOLDER") {
+function makePlaceholder(label = "IMAGE UNAVAILABLE") {
   const placeholder = document.createElement("span");
   placeholder.className = "placeholder-image";
   placeholder.textContent = label;
@@ -255,11 +240,12 @@ async function loadCatalog() {
     const response = await fetch("data/products.json");
     if (!response.ok) throw new Error(`Product data returned ${response.status}`);
     const realProducts = await response.json();
-    for (const product of [...realProducts, ...makePreviewProducts(realProducts)]) {
+    for (const product of realProducts) {
       products.set(product.id, product);
     }
     renderCatalog();
-    catalogStatus.hidden = true;
+    catalogStatus.textContent = products.size ? "" : "No products available yet.";
+    catalogStatus.hidden = products.size > 0;
   } catch (error) {
     catalogStatus.textContent = "Products could not be loaded. Please refresh to try again.";
     console.error("Unable to load the catalog:", error);

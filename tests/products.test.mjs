@@ -5,7 +5,6 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import vm from "node:vm";
 import { addProduct, buildCatalog, writeCatalog, checkCatalog } from "../scripts/products.mjs";
 
 async function fixture(t) {
@@ -135,19 +134,6 @@ test("malformed JSON errors identify the source file", async (t) => {
   const root = await fixture(t);
   await writeFile(path.join(root, "content/products/broken.json"), "{");
   await assert.rejects(buildCatalog(root), /broken.json/);
-});
-
-test("preview placeholders shrink as the real catalog grows and never collide with product slugs", async () => {
-  const source = await readFile(new URL("../js/main.js", import.meta.url), "utf8");
-  const start = source.indexOf("function makePreviewProducts(");
-  const end = source.indexOf("function formatPrice(", start);
-  const context = vm.createContext({});
-  vm.runInContext(source.slice(start, end), context);
-  assert.equal(context.makePreviewProducts([{}]).length, 9);
-  assert.equal(context.makePreviewProducts(Array(6).fill({})).length, 4);
-  assert.equal(context.makePreviewProducts(Array(10).fill({})).length, 0);
-  assert.equal(context.makePreviewProducts(Array(12).fill({})).length, 0);
-  assert.match(context.makePreviewProducts([{}])[0].id, /^preview:/);
 });
 
 test("CLI rejects unknown commands and prints help", () => {
