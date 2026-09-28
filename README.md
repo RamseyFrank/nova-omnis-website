@@ -28,8 +28,8 @@ No fonts are downloaded from external services.
 - Nine clearly marked temporary products live in `js/main.js`. Their $5 prices
   are sample data, and their image areas are CSS blocks. Replace these entries
   as real products are added to keep the catalog at ten products.
-- The grid uses four columns on desktop, three on narrower tablet/laptop widths,
-  and two on phones. Only widths below 300px use one column.
+- The grid uses two columns on desktop and tablet, and one column at widths of
+  480px or less. The centered page is capped at 1280px, with fluid square images.
 - The plus button adds one item without opening a dialog. Product images and
   names open the detail overlay. CART opens the quantity controls and subtotal.
 - The cart stays in memory for the current page session and resets on refresh.
