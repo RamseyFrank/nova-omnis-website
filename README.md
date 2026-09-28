@@ -93,6 +93,9 @@ The lowercase `novaomnis` wordmark loads Motter Tektura at its regular weight fr
 the supplied `static.wfonts.com` WOFF URL. It uses a 32px desktop size, smaller
 sizes on narrow screens, and the color `#373c44`. While the font loads, or if the
 remote service is unavailable, the wordmark uses the system font fallback.
+On page entry, a single staggered color wave passes through the letters using
+the product-background palette, then returns to the normal wordmark color.
+The animation is disabled for reduced-motion preferences and forced-color mode.
 
 ## Local Satoshi fonts
 
@@ -117,7 +120,7 @@ Satoshi is not downloaded from external services; only the wordmark font is remo
 - The grid uses two columns on desktop and tablet, and one column at widths of
   480px or less. The centered page is capped at 1280px, with fluid square images.
 - The plus button adds one item without opening a dialog. Product images and
-  names open the detail overlay. CART opens the quantity controls and subtotal.
+  names open the detail overlay. The cart icon opens the quantity controls and subtotal.
 - The cart stays in memory for the current page session and resets on refresh.
   Prices are displayed in USD. Reducing a quantity to zero removes the item.
 - CHECKOUT is a disabled visual placeholder. No payment or checkout service is

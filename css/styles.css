@@ -158,12 +158,43 @@ img {
 }
 
 .cart-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 44px;
   min-height: 44px;
   padding: 8px 0 8px 12px;
   font-size: 12px;
   font-weight: 500;
   letter-spacing: .05em;
   white-space: nowrap;
+}
+
+.cart-icon {
+  flex-shrink: 0;
+}
+
+/* A single color wave using the product cover backgrounds, from warm to cool. */
+@keyframes wordmark-rainbow {
+  0%, 100% { color: #373c44; }
+  12% { color: #d7b1ab; } /* Sister of Battle: pink */
+  22% { color: #dd9788; } /* World Eater: coral */
+  32% { color: #dbb671; } /* Greyknight: gold */
+  40% { color: #9f8e66; } /* Thunder Warrior: ochre */
+  48% { color: #d3cca5; } /* Jump pack: cream */
+  56% { color: #d3ce99; } /* Imperial Fists: yellow */
+  64% { color: #aed1ae; } /* Corvus: green */
+  72% { color: #aac5b7; } /* Dark Angel: sage */
+  80% { color: #9ad3b9; } /* Carnifex: mint */
+  88% { color: #9ec7e2; } /* Classic Marine: blue */
+}
+
+@media (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+  .wordmark > span {
+    animation: wordmark-rainbow 3s ease-in-out 1;
+    animation-delay: calc(350ms + var(--letter-index) * 90ms);
+  }
 }
 
 .catalog {
