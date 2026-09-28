@@ -16,19 +16,20 @@ const cart = new Map();
 const feedbackTimers = new WeakMap();
 let activeProduct = null;
 
-// TEMPORARY PLACEHOLDER DATA: replace these nine entries when real products exist.
-// Kept out of data/products.json so the real product data stays unchanged.
-const placeholderProducts = Array.from({ length: 9 }, (_, index) => {
-  const number = String(index + 2).padStart(2, "0");
-  return {
-    id: `placeholder-${number}`,
-    name: `Placeholder ${number}`,
-    price: 5,
-    description: "Temporary product used to preview the catalog layout.",
-    images: [],
-    placeholder: true,
-  };
-});
+// Fill the prototype layout until there are ten real products; never cap the catalog.
+function makePreviewProducts(realProducts) {
+  return Array.from({ length: Math.max(0, 10 - realProducts.length) }, (_, index) => {
+    const number = String(realProducts.length + index + 1).padStart(2, "0");
+    return {
+      id: `preview:${number}`,
+      name: `Placeholder ${number}`,
+      price: 5,
+      description: "Temporary product used to preview the catalog layout.",
+      images: [],
+      placeholder: true,
+    };
+  });
+}
 
 function formatPrice(amount) {
   return currency.format(amount);
@@ -254,7 +255,7 @@ async function loadCatalog() {
     const response = await fetch("data/products.json");
     if (!response.ok) throw new Error(`Product data returned ${response.status}`);
     const realProducts = await response.json();
-    for (const product of [...realProducts, ...placeholderProducts]) {
+    for (const product of [...realProducts, ...makePreviewProducts(realProducts)]) {
       products.set(product.id, product);
     }
     renderCatalog();

@@ -1,4 +1,12 @@
-/* Add the licensed local font files here; see README.md. No remote fonts. */
+/* Wordmark font supplied by the user; Satoshi files are loaded locally. */
+@font-face {
+  font-family: "mottertektura";
+  src: url("https://static.wfonts.com/data/2015/12/24/motter-tektura/mottertektura.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 @font-face {
   font-family: "Satoshi";
   src: url("../assets/fonts/satoshi/Satoshi-Regular.woff2") format("woff2");
@@ -141,9 +149,12 @@ img {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -.035em;
+  font-family: "mottertektura", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 32px;
+  color: #373c44;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: lowercase;
 }
 
 .cart-trigger {
@@ -586,7 +597,7 @@ dialog::backdrop {
   }
 
   .wordmark {
-    font-size: 17px;
+    font-size: 26px;
   }
 
   .catalog {
@@ -641,6 +652,6 @@ dialog::backdrop {
 
 @media (max-width: 299px) {
   .wordmark {
-    font-size: 14px;
+    font-size: 22px;
   }
 }

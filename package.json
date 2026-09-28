@@ -1,0 +1,14 @@
+{
+  "name": "nova-omnis",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Nova Omnis static storefront and product pipeline",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "product:add": "node scripts/products.mjs add",
+    "catalog:build": "node scripts/products.mjs build",
+    "catalog:check": "node scripts/products.mjs check",
+    "test": "node --test",
+    "check": "npm run catalog:check && npm test"
+  }
+}
