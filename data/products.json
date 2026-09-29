@@ -19,7 +19,12 @@
     "price": 5,
     "description": "",
     "images": [
-      "assets/images/products/world-eater-marine/01.webp"
+      "assets/images/products/world-eater-marine/01.webp",
+      "assets/images/products/world-eater-marine/02.webp",
+      "assets/images/products/world-eater-marine/03.webp",
+      "assets/images/products/world-eater-marine/04.webp",
+      "assets/images/products/world-eater-marine/05.webp",
+      "assets/images/products/world-eater-marine/06.webp"
     ]
   },
   {
