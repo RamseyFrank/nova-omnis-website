@@ -306,8 +306,13 @@ img {
   border-color: #d0dfd4;
 }
 
-.quick-add.is-added {
-  font-size: 20px;
+.quick-add-check,
+.quick-add.is-added > span {
+  display: none;
+}
+
+.quick-add.is-added .quick-add-check {
+  display: block;
 }
 
 dialog {
