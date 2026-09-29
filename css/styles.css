@@ -220,6 +220,11 @@ img {
   min-width: 0;
 }
 
+.product-card {
+  border-radius: var(--radius-media);
+  background: #f8f7f4;
+}
+
 .product-media {
   position: relative;
   display: block;
@@ -257,20 +262,20 @@ img {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 8px;
-  padding-top: 16px;
+  gap: 12px;
+  padding: 18px;
 }
 
 .product-copy h2 {
   font-size: inherit;
-  font-weight: 500;
+  font-weight: 700;
 }
 
 .product-name {
   display: block;
   padding: 0;
   text-align: left;
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1.4;
   overflow-wrap: anywhere;
 }
@@ -287,7 +292,6 @@ img {
   place-items: center;
   width: 44px;
   height: 44px;
-  margin-top: -4px;
   border: 1px solid var(--line);
   border-radius: 50%;
   font-size: 23px;
@@ -303,12 +307,7 @@ img {
 }
 
 .quick-add.is-added {
-  flex: 0 0 auto;
-  width: auto;
-  padding-inline: 12px;
-  border-radius: 999px;
-  font-size: 11px;
-  white-space: nowrap;
+  font-size: 20px;
 }
 
 dialog {
@@ -651,13 +650,7 @@ dialog::backdrop {
   }
 
   .product-info {
-    gap: 4px;
-    padding-top: 10px;
-  }
-
-  .product-name,
-  .product-price {
-    font-size: 12px;
+    padding: 16px;
   }
 
   .product-dialog {

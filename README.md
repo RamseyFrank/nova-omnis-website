@@ -122,7 +122,8 @@ Satoshi is not downloaded from external services; only the wordmark font is remo
 - The plus button adds one item without opening a dialog. Product images and
   names open the detail overlay. The cart icon opens the product list and subtotal.
 - Each product can be added only once per cart. Its add buttons stay disabled
-  and sage with "Added to cart" until it is removed. Different products can be
+  and sage with a checkmark on the card and "Added to cart" in the detail overlay
+  until it is removed. Different products can be
   added together; cart rows provide Remove without quantity controls.
 - The cart icon shows a count only when items are present. Each cart row includes
   the product's cover image beside its name, price, and total.

@@ -76,7 +76,7 @@ function syncAddButton(button, product) {
   button.classList.toggle("is-added", added);
   button.setAttribute("aria-label", added ? `${product.name} added to cart` : `Add ${product.name} to cart`);
   if (button.classList.contains("quick-add")) {
-    button.firstElementChild.textContent = added ? "Added to cart" : "+";
+    button.firstElementChild.textContent = added ? "\u2713" : "+";
   } else {
     button.textContent = added ? "Added to cart" : "ADD TO CART";
   }
