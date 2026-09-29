@@ -4,5 +4,6 @@
   "price": 5,
   "description": "",
   "status": "published",
-  "order": 30
+  "order": 30,
+  "images": ["06.webp", "01.webp", "02.webp", "03.webp", "04.webp", "05.webp"]
 }
