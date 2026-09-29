@@ -34,7 +34,7 @@
 :root {
   font-family: "Satoshi", Arial, sans-serif;
   color: #242622;
-  background: #fcfbf8;
+  background: #f7f6f2;
   font-synthesis: none;
   --muted: #71736e;
   --line: #e8e5de;
@@ -198,7 +198,7 @@ img {
 }
 
 .catalog {
-  padding-top: 12px;
+  padding-top: 20px;
   padding-bottom: 72px;
 }
 
@@ -222,7 +222,8 @@ img {
 
 .product-card {
   border-radius: var(--radius-media);
-  background: #f4f1ec;
+  background: var(--panel);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 4.5%);
 }
 
 .product-media {
@@ -592,6 +593,17 @@ dialog::backdrop {
   text-align: center;
 }
 
+@media (min-width: 761px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .product-card {
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+
+  .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgb(0 0 0 / 7%);
+  }
+}
+
 @media (hover: hover) {
   .product-name:hover,
   .cart-trigger:hover,
@@ -646,7 +658,7 @@ dialog::backdrop {
   }
 
   .catalog {
-    padding-top: 8px;
+    padding-top: 12px;
     padding-bottom: 40px;
   }
 
