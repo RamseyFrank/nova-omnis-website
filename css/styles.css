@@ -1,7 +1,7 @@
 /* Wordmark font supplied by the user; Satoshi files are loaded locally. */
 @font-face {
-  font-family: "mottertektura";
-  src: url("https://static.wfonts.com/data/2015/12/24/motter-tektura/mottertektura.woff") format("woff");
+  font-family: "Bauhaus 93 Regular";
+  src: url("https://static.wfonts.com/data/2014/12/29/bauhaus-93/Bauhaus%2093%20Regular.ttf") format("truetype");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -149,7 +149,7 @@ img {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  font-family: "mottertektura", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Bauhaus 93 Regular", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 32px;
   color: #373c44;
   font-weight: 400;
