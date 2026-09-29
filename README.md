@@ -89,7 +89,7 @@ Image validation checks filenames and files, not image decoding or visual qualit
 
 ## Wordmark font
 
-The lowercase `novaomnis` wordmark loads Bauhaus 93 Regular at its regular weight from
+The lowercase `novaomnis` wordmark loads Bauhaus Bold (`bauhaub`) from
 the supplied `static.wfonts.com` TrueType URL. It uses a 32px desktop size, smaller
 sizes on narrow screens, and the color `#373c44`. While the font loads, or if the
 remote service is unavailable, the wordmark uses the system font fallback.
