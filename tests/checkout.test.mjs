@@ -33,7 +33,7 @@ test("checkout prices come from the server and paid sessions gate STL downloads"
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   t.after(() => new Promise((resolve) => server.close(resolve)));
   const base = `http://127.0.0.1:${server.address().port}`;
-  assert.deepEqual(await (await fetch(`${base}/api/health`)).json(), { checkout: false });
+  assert.deepEqual(await (await fetch(`${base}/api/health`)).json(), { checkout: false, missing: ["other.stl"] });
   const checkout = await fetch(`${base}/api/checkout`, { method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ productIds: ["marine"], price: 1 }) });
   assert.equal(checkout.status, 200);

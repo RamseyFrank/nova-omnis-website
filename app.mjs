@@ -87,7 +87,9 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
       if (req.method === "GET" && url.pathname === "/api/health") {
         const products = await catalog();
         const filesReady = await Promise.all(products.map((product) => hasStl(product.id)));
-        return sendJson(res, 200, { checkout: products.length > 0 && filesReady.every(Boolean) });
+        const missing = products.filter((_, index) => !filesReady[index]).map((product) => `${product.id}.stl`);
+        return sendJson(res, 200, missing.length || !products.length
+          ? { checkout: false, missing } : { checkout: true });
       }
       if (req.method === "POST" && url.pathname === "/api/checkout") {
         if (req.headers.origin && req.headers.origin !== origin) throw Object.assign(new Error("Invalid origin"), { status: 403 });
