@@ -238,5 +238,20 @@ async function loadCatalog() {
   }
 }
 
+async function observeFooterWordmark() {
+  const wordmark = document.querySelector(".site-footer .wordmark");
+  if (!wordmark || !("IntersectionObserver" in window)) return;
+
+  // Wait for the catalog and font to settle before checking footer visibility.
+  await document.fonts.ready;
+  const observer = new IntersectionObserver((entries) => {
+    if (entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.25)) {
+      wordmark.classList.add("is-visible");
+      observer.disconnect();
+    }
+  }, { threshold: 0.25 });
+  observer.observe(wordmark);
+}
+
 updateCart();
-loadCatalog();
+loadCatalog().then(observeFooterWordmark);

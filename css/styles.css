@@ -34,8 +34,9 @@
 :root {
   font-family: "Satoshi", Arial, sans-serif;
   color: #242622;
-  background: #f7f6f2;
+  background: var(--page-background);
   font-synthesis: none;
+  --page-background: #f7f6f2;
   --muted: #71736e;
   --line: #e8e5de;
   --surface: #f2f0eb;
@@ -138,11 +139,23 @@ img {
 }
 
 .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--page-background);
   min-height: 112px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
+}
+
+@supports ((backdrop-filter: blur(16px)) or (-webkit-backdrop-filter: blur(16px))) {
+  .site-header {
+    background: rgb(247 246 242 / 78%);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
 }
 
 .wordmark {
@@ -191,7 +204,8 @@ img {
 }
 
 @media (prefers-reduced-motion: no-preference) and (forced-colors: none) {
-  .wordmark > span {
+  .site-header .wordmark > span,
+  .site-footer .wordmark.is-visible > span {
     animation: wordmark-rainbow 3s ease-in-out 1;
     animation-delay: calc(350ms + var(--letter-index) * 90ms);
   }
@@ -205,6 +219,26 @@ img {
 .catalog-status {
   padding-block: 40px;
   color: var(--muted);
+}
+
+.site-footer-content {
+  container-type: inline-size;
+  border-top: 1px solid var(--line);
+  padding-block: 24px 12px;
+}
+
+.site-footer .wordmark {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(24px, 4vw, 56px);
+  font-size: 21cqw;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.site-footer-copyright {
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .product-grid {
