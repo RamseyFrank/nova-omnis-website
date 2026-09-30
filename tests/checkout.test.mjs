@@ -9,22 +9,27 @@ test("checkout prices come from the server and paid sessions gate STL downloads"
   const workspace = await mkdtemp(path.join(tmpdir(), "nova-checkout-"));
   t.after(() => rm(workspace, { recursive: true, force: true }));
   const siteRoot = path.join(workspace, "site");
-  const storageDir = path.join(workspace, "private");
   await mkdir(path.join(siteRoot, "data"), { recursive: true });
-  await mkdir(storageDir);
   await writeFile(path.join(siteRoot, "data/products.json"), JSON.stringify([
     { id: "marine", name: "Marine", price: 5 }, { id: "other", name: "Other", price: 7 },
   ]));
-  await writeFile(path.join(storageDir, "marine.stl"), "solid marine\nendsolid marine\n");
   const calls = [];
   let paid = false;
   const fetchImpl = async (url, options) => {
     calls.push({ url, options });
-    if (options.method === "POST") return Response.json({ url: "https://checkout.stripe.com/test-session" });
-    return Response.json({ id: "cs_test_123", mode: "payment", status: "complete",
-      payment_status: paid ? "paid" : "unpaid", metadata: { product_ids: "marine" } });
+    if (url.startsWith("https://api.stripe.com/")) {
+      if (options.method === "POST") return Response.json({ url: "https://checkout.stripe.com/test-session" });
+      return Response.json({ id: "cs_test_123", mode: "payment", status: "complete",
+        payment_status: paid ? "paid" : "unpaid", metadata: { product_ids: "marine" } });
+    }
+    assert.match(options.headers.Authorization, /^AWS4-HMAC-SHA256 Credential=test-access\/\d{8}\/auto\/s3\/aws4_request,/);
+    if (url.endsWith("/other.stl")) return new Response(null, { status: 404 });
+    assert.equal(url, `https://${"a".repeat(32)}.r2.cloudflarestorage.com/nova-private/marine.stl`);
+    if (options.method === "HEAD") return new Response(null, { headers: { "content-length": "29" } });
+    return new Response("solid marine\nendsolid marine\n");
   };
-  const server = createApp({ secretKey: "sk_test_example", baseUrl: "http://127.0.0.1", storageDir, siteRoot, fetchImpl });
+  const server = createApp({ secretKey: "sk_test_example", baseUrl: "http://127.0.0.1", siteRoot, fetchImpl,
+    r2AccountId: "a".repeat(32), r2Bucket: "nova-private", r2AccessKeyId: "test-access", r2SecretAccessKey: "test-secret" });
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   t.after(() => new Promise((resolve) => server.close(resolve)));
   const base = `http://127.0.0.1:${server.address().port}`;
@@ -33,7 +38,7 @@ test("checkout prices come from the server and paid sessions gate STL downloads"
     body: JSON.stringify({ productIds: ["marine"], price: 1 }) });
   assert.equal(checkout.status, 200);
   assert.equal((await checkout.json()).url, "https://checkout.stripe.com/test-session");
-  const form = new URLSearchParams(calls[0].options.body);
+  const form = new URLSearchParams(calls.find((call) => call.options.method === "POST").options.body);
   assert.equal(form.get("line_items[0][price_data][unit_amount]"), "500");
   assert.equal(form.get("metadata[product_ids]"), "marine");
   const pendingOrder = await fetch(`${base}/api/order?session_id=cs_test_123`);

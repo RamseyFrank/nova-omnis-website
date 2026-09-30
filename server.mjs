@@ -1,8 +1,11 @@
 import { createServer } from "node:http";
 import { createReadStream } from "node:fs";
 import { readFile, stat } from "node:fs/promises";
+import { Readable } from "node:stream";
+import { pipeline } from "node:stream/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createR2Client } from "./r2.mjs";
 
 const root = fileURLToPath(new URL("./", import.meta.url));
 const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -27,18 +30,19 @@ async function readBody(req) {
 }
 
 export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl = process.env.PUBLIC_BASE_URL,
-  storageDir = process.env.STL_STORAGE_DIR, fetchImpl = fetch, siteRoot = root } = {}) {
-  if (!secretKey || !baseUrl || !storageDir || !path.isAbsolute(storageDir)) {
-    throw new Error("Set STRIPE_SECRET_KEY, PUBLIC_BASE_URL, and an absolute STL_STORAGE_DIR before starting the server.");
+  r2AccountId = process.env.R2_ACCOUNT_ID, r2Bucket = process.env.R2_BUCKET,
+  r2AccessKeyId = process.env.R2_ACCESS_KEY_ID, r2SecretAccessKey = process.env.R2_SECRET_ACCESS_KEY,
+  r2Jurisdiction = process.env.R2_JURISDICTION || "",
+  fetchImpl = fetch, siteRoot = root } = {}) {
+  if (!secretKey || !baseUrl) {
+    throw new Error("Set STRIPE_SECRET_KEY and PUBLIC_BASE_URL before starting the server.");
   }
   const origin = new URL(baseUrl).origin;
   if (new URL(baseUrl).pathname !== "/" || !/^https?:$/.test(new URL(baseUrl).protocol)) {
     throw new Error("PUBLIC_BASE_URL must be an HTTP(S) origin without a path.");
   }
-  const relativeStorage = path.relative(siteRoot, storageDir);
-  if (!relativeStorage.startsWith("..") && !path.isAbsolute(relativeStorage)) {
-    throw new Error("STL_STORAGE_DIR must be outside the website directory.");
-  }
+  const r2 = createR2Client({ accountId: r2AccountId, bucket: r2Bucket, accessKeyId: r2AccessKeyId,
+    secretAccessKey: r2SecretAccessKey, jurisdiction: r2Jurisdiction, fetchImpl });
 
   async function stripe(endpoint, options = {}) {
     const response = await fetchImpl(`https://api.stripe.com/v1/${endpoint}`, {
@@ -55,8 +59,7 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
   }
 
   async function hasStl(id) {
-    const file = await stat(path.join(storageDir, `${id}.stl`)).catch(() => null);
-    return Boolean(file?.isFile() && file.size > 0);
+    return r2.exists(id);
   }
 
   async function paidOrder(sessionId, allowPending = false) {
@@ -125,12 +128,16 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
         const id = url.searchParams.get("id");
         const ids = await paidOrder(url.searchParams.get("session_id"));
         if (!ids.includes(id)) throw Object.assign(new Error("This file is not in the order"), { status: 403 });
-        const filePath = path.join(storageDir, `${id}.stl`);
-        const file = await stat(filePath).catch(() => null);
-        if (!file?.isFile()) throw Object.assign(new Error("File unavailable"), { status: 404 });
-        res.writeHead(200, { "Content-Type": "model/stl", "Content-Length": file.size,
-          "Content-Disposition": `attachment; filename="${id}.stl"`, "Cache-Control": "private, no-store" });
-        return createReadStream(filePath).pipe(res);
+        const object = await r2.get(id);
+        if (!object?.body) throw Object.assign(new Error("File unavailable"), { status: 404 });
+        const length = object.headers.get("content-length");
+        const size = Number(length);
+        const headers = { "Content-Type": "model/stl",
+          "Content-Disposition": `attachment; filename="${id}.stl"`, "Cache-Control": "private, no-store" };
+        if (length !== null && Number.isSafeInteger(size) && size >= 0) headers["Content-Length"] = size;
+        res.writeHead(200, headers);
+        await pipeline(Readable.fromWeb(object.body), res);
+        return;
       }
       if (req.method === "GET" && (publicFiles.has(url.pathname) || imagePath.test(url.pathname) || fontPath.test(url.pathname))) {
         const name = url.pathname === "/" ? "/index.html" : url.pathname;
@@ -144,6 +151,7 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
     } catch (error) {
       if (!error.status) console.error(error);
       if (!res.headersSent) sendJson(res, error.status || 500, { error: error.status ? error.message : "Server error" });
+      else res.destroy(error);
     }
   }
   return createServer(handler);
