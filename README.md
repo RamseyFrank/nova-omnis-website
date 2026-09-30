@@ -31,7 +31,8 @@ as public static assets.
    Checkout requires this server; a static file host alone cannot protect the files
    or call Stripe with a secret key.
 5. Test a purchase using Stripe test mode and a test card before switching to a
-   live key. A paid order returns to `order.html` with download links. Save that
+   live key. A paid order returns to `order.html` with download links. If payment
+   is still processing, the page checks again for up to one minute. Save that
    link: it allows repeat downloads and should be treated as private. The current
    implementation delivers files on that page; it does not email download links.
 
@@ -42,24 +43,32 @@ Deploy Web App** and deploy this project from GitHub or a ZIP. Choose Node.js 22
 and **Other** if asked for a framework; set the entry file to `server.mjs` or the
 start command to `npm start`. This project has no build command.
 
-For STL storage, use Hostinger File Manager to create a private folder at the
-domain's directory level, alongside `public_html` and `hbuilds`, for example
-`/home/u12345678/domains/example.com/private_stl`. Upload `<product-id>.stl`
-files there and set `STL_STORAGE_DIR` to that exact absolute path. The number
-and domain are examples; use your own path. Do not put STL files under
-`public_html` or `hbuilds`: Hostinger says those locations are managed by
-deployments and overwritten. Set the three environment variables above in the
-Node.js app deployment settings. The storage folder's readability by the app
-must be verified with a test purchase before going live.
+For STL storage, use Hostinger File Manager's hosting-plan root to create a
+private folder outside every website's `domains/` directory, for example
+`/home/u12345678/private_stl`. Upload `<product-id>.stl` files there and set
+`STL_STORAGE_DIR` to that exact absolute path. The username is an example; use
+your own path. Keep the files outside `public_html` and `hbuilds`, which are
+managed by deployments. A folder inside the existing website's domain
+directory can be removed when that website is deleted. Set the three
+environment variables above in the Node.js app deployment settings. After
+uploading the files, check
+`https://novaomnis.com/api/health` for `{"checkout":true}`. If checkout is
+`false`, verify that every published product ID has a nonempty `<product-id>.stl`
+in the private folder and that the app can read it. Complete a Stripe test
+purchase and open a download before switching to the live key.
 
-For a direct `novaomnis.com` deployment, push this repository to GitHub, then
-create a Hostinger Node.js web app connected to that repository and set
-`PUBLIC_BASE_URL=https://novaomnis.com`. Hostinger currently requires removing
-the website already assigned to `novaomnis.com` before a new Node.js website
-can use that domain. Perform that domain reassignment in hPanel after the new
-app's configuration is ready. The checkout button checks `/api/health`, so it
-remains disabled while the existing static site is still serving the domain and
-until every published product has a private STL file.
+For `novaomnis.com`, first deploy the Node.js app on a temporary Hostinger
+domain, using that temporary HTTPS origin as `PUBLIC_BASE_URL`. Verify its
+`/api/health` response. When ready to switch, release `novaomnis.com` from
+the existing website before connecting it to the Node.js app. Hostinger may
+offer **Change domain → Use temporary domain** to keep the old site's files,
+but its domain-change flow warns that associated email accounts, subdomains,
+and existing backups may be lost. Back those up and review the exact hPanel
+confirmation first. Deleting the old website is another way to release the
+domain, but it removes that website's files and settings. Change
+`PUBLIC_BASE_URL` to `https://novaomnis.com` in the Node.js app settings. The
+checkout button checks `/api/health`, so it remains disabled until every
+published product has a private STL file.
 Use a Stripe test key for the first purchase test on the live domain; replace it
 with a live key after payment and download succeed in test mode.
 
@@ -68,7 +77,8 @@ with a live key after payment and download succeed in test mode.
 Product details live in `content/products/<id>.json`. The pipeline validates these
 files and their images, then generates `data/products.json` for the storefront.
 **Edit the source files, not the generated catalog.** Node.js 22 or newer is needed
-for these commands; no `npm install` is required. The deployed site stays static.
+for these commands; no `npm install` is required. The catalog is served by the
+Node.js app after deployment.
 
 ### Add a product
 

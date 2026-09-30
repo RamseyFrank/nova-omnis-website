@@ -59,10 +59,14 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
     return Boolean(file?.isFile() && file.size > 0);
   }
 
-  async function paidOrder(sessionId) {
+  async function paidOrder(sessionId, allowPending = false) {
     if (!sessionPattern.test(sessionId || "")) throw Object.assign(new Error("Invalid order link"), { status: 400 });
     const session = await stripe(`checkout/sessions/${sessionId}`);
-    if (session.id !== sessionId || session.mode !== "payment" || session.status !== "complete" || session.payment_status !== "paid") {
+    if (session.id !== sessionId || session.mode !== "payment" || session.status !== "complete") {
+      throw Object.assign(new Error("Payment is not complete"), { status: 403 });
+    }
+    if (session.payment_status !== "paid") {
+      if (allowPending && session.payment_status === "unpaid") return null;
       throw Object.assign(new Error("Payment is not complete"), { status: 403 });
     }
     const ids = (session.metadata?.product_ids || "").split(",");
@@ -112,7 +116,8 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
         return sendJson(res, 200, { url: session.url });
       }
       if (req.method === "GET" && url.pathname === "/api/order") {
-        const ids = await paidOrder(url.searchParams.get("session_id"));
+        const ids = await paidOrder(url.searchParams.get("session_id"), true);
+        if (ids === null) return sendJson(res, 202, { status: "pending" });
         const products = await catalog();
         return sendJson(res, 200, { products: ids.map((id) => ({ id, name: products.find((product) => product.id === id)?.name || id })) });
       }

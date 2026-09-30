@@ -36,6 +36,9 @@ test("checkout prices come from the server and paid sessions gate STL downloads"
   const form = new URLSearchParams(calls[0].options.body);
   assert.equal(form.get("line_items[0][price_data][unit_amount]"), "500");
   assert.equal(form.get("metadata[product_ids]"), "marine");
+  const pendingOrder = await fetch(`${base}/api/order?session_id=cs_test_123`);
+  assert.equal(pendingOrder.status, 202);
+  assert.deepEqual(await pendingOrder.json(), { status: "pending" });
   assert.equal((await fetch(`${base}/api/download?session_id=cs_test_123&id=marine`)).status, 403);
   paid = true;
   const order = await fetch(`${base}/api/order?session_id=cs_test_123`);
