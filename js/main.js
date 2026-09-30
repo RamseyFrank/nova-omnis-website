@@ -8,6 +8,10 @@ const cartTrigger = document.querySelector("#cart-trigger");
 const cartItems = document.querySelector("#cart-items");
 const detailAdd = document.querySelector("#detail-add");
 const detailStatus = document.querySelector("#detail-status");
+const checkoutButton = document.querySelector("#checkout-button");
+const checkoutNote = document.querySelector("#checkout-note");
+let checkoutPending = false;
+let checkoutReady = false;
 
 // Prices in the current data are displayed as USD for this storefront prototype.
 const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
@@ -137,6 +141,9 @@ function updateCart() {
   cartTrigger.setAttribute("aria-label", `Cart, ${count} ${count === 1 ? "item" : "items"}`);
   document.querySelector("#cart-empty").hidden = count > 0;
   cartItems.hidden = count === 0;
+  checkoutButton.disabled = count === 0 || checkoutPending || !checkoutReady;
+  checkoutNote.textContent = !checkoutReady ? "Checkout is being set up. Please check back soon."
+    : count === 0 ? "Add a product to check out." : "STL files are available to download after payment.";
 
   // Use integer cents for the subtotal to avoid floating-point rounding drift.
   let subtotalCents = 0;
@@ -150,6 +157,29 @@ function updateCart() {
   if (activeProduct) syncAddButton(detailAdd, activeProduct);
   if (cartDialog.open) renderCartItems();
 }
+
+checkoutButton.addEventListener("click", async () => {
+  if (!cart.size || checkoutPending) return;
+  checkoutPending = true;
+  checkoutButton.disabled = true;
+  checkoutButton.textContent = "OPENING CHECKOUT…";
+  checkoutNote.textContent = "Connecting to Stripe…";
+  try {
+    const response = await fetch("/api/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ productIds: [...cart] }),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || "Checkout could not start.");
+    window.location.assign(result.url);
+  } catch (error) {
+    checkoutNote.textContent = error.message || "Checkout could not start. Please try again.";
+    checkoutPending = false;
+    checkoutButton.disabled = cart.size === 0;
+    checkoutButton.textContent = "CHECKOUT";
+  }
+});
 
 function removeFromCart(id) {
   const product = products.get(id);
@@ -238,6 +268,16 @@ async function loadCatalog() {
   }
 }
 
+async function loadCheckoutAvailability() {
+  try {
+    const response = await fetch("/api/health", { cache: "no-store" });
+    if (response.ok && (await response.json()).checkout === true) checkoutReady = true;
+  } catch {
+    // Static deployments have no checkout API yet.
+  }
+  updateCart();
+}
+
 async function observeFooterWordmark() {
   const wordmark = document.querySelector(".site-footer .wordmark");
   if (!wordmark || !("IntersectionObserver" in window)) return;
@@ -254,4 +294,5 @@ async function observeFooterWordmark() {
 }
 
 updateCart();
+loadCheckoutAvailability();
 loadCatalog().then(observeFooterWordmark);

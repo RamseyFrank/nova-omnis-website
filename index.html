@@ -6,7 +6,7 @@
     <title>Nova Omnis</title>
     <meta name="description" content="Explore the Nova Omnis collection.">
     <link rel="stylesheet" href="css/styles.css?v=20260930-5">
-    <script src="js/main.js?v=20260930-1" defer></script>
+    <script src="js/main.js?v=20260930-2" defer></script>
   </head>
   <body>
     <header class="site-header page-width">
@@ -73,7 +73,7 @@
         <div class="cart-footer">
           <div class="subtotal-row"><span>Subtotal</span><strong id="cart-subtotal">$0.00</strong></div>
           <button class="primary-button" id="checkout-button" type="button" disabled aria-describedby="checkout-note">CHECKOUT</button>
-          <p class="checkout-note" id="checkout-note">Checkout is not available in this preview.</p>
+          <p class="checkout-note" id="checkout-note" role="status" aria-live="polite">Add a product to check out.</p>
           <p class="visually-hidden" id="drawer-status" role="status" aria-atomic="true"></p>
         </div>
       </div>

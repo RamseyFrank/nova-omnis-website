@@ -740,3 +740,10 @@ dialog::backdrop {
     font-size: 22px;
   }
 }
+.order-home { color: inherit; font-size: 2rem; font-weight: 700; text-decoration: none; }
+.order-page { padding-block: 5rem; min-height: 60vh; }
+.order-page h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+.order-downloads { list-style: none; padding: 0; margin: 2rem 0; }
+.order-downloads li { margin: 0 0 1rem; }
+.order-downloads a { display: inline-block; padding: 1rem 1.5rem; background: #373c44; color: white; text-decoration: none; }
+.order-help { max-width: 36rem; }

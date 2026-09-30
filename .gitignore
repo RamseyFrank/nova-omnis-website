@@ -1,6 +1,9 @@
 .DS_Store
 Thumbs.db
 .vscode/
+.env
+.env.*
+*.stl
 
 # Keep original high-resolution product images local.
 assets/images/products/*/originals/

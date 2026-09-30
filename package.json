@@ -5,6 +5,7 @@
   "description": "Nova Omnis static storefront and product pipeline",
   "engines": { "node": ">=22" },
   "scripts": {
+    "start": "node server.mjs",
     "product:add": "node scripts/products.mjs add",
     "catalog:build": "node scripts/products.mjs build",
     "catalog:check": "node scripts/products.mjs check",
