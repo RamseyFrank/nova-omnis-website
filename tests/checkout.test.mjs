@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, mkdir, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { createApp } from "../server.mjs";
+import { createApp } from "../app.mjs";
 
 test("checkout prices come from the server and paid sessions gate STL downloads", async (t) => {
   const workspace = await mkdtemp(path.join(tmpdir(), "nova-checkout-"));
