@@ -58,7 +58,8 @@ create a Hostinger Node.js web app connected to that repository and set
 the website already assigned to `novaomnis.com` before a new Node.js website
 can use that domain. Perform that domain reassignment in hPanel after the new
 app's configuration is ready. The checkout button checks `/api/health`, so it
-remains disabled while the existing static site is still serving the domain.
+remains disabled while the existing static site is still serving the domain and
+until every published product has a private STL file.
 Use a Stripe test key for the first purchase test on the live domain; replace it
 with a live key after payment and download succeed in test mode.
 

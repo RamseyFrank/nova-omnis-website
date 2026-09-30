@@ -54,6 +54,11 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
     return JSON.parse(await readFile(path.join(siteRoot, "data/products.json"), "utf8"));
   }
 
+  async function hasStl(id) {
+    const file = await stat(path.join(storageDir, `${id}.stl`)).catch(() => null);
+    return Boolean(file?.isFile() && file.size > 0);
+  }
+
   async function paidOrder(sessionId) {
     if (!sessionPattern.test(sessionId || "")) throw Object.assign(new Error("Invalid order link"), { status: 400 });
     const session = await stripe(`checkout/sessions/${sessionId}`);
@@ -73,7 +78,9 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
     try {
       const url = new URL(req.url, origin);
       if (req.method === "GET" && url.pathname === "/api/health") {
-        return sendJson(res, 200, { checkout: true });
+        const products = await catalog();
+        const filesReady = await Promise.all(products.map((product) => hasStl(product.id)));
+        return sendJson(res, 200, { checkout: products.length > 0 && filesReady.every(Boolean) });
       }
       if (req.method === "POST" && url.pathname === "/api/checkout") {
         if (req.headers.origin && req.headers.origin !== origin) throw Object.assign(new Error("Invalid origin"), { status: 403 });
@@ -88,8 +95,7 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
           throw Object.assign(new Error("A product is unavailable"), { status: 400 });
         }
         for (const id of ids) {
-          const file = await stat(path.join(storageDir, `${id}.stl`)).catch(() => null);
-          if (!file?.isFile() || file.size === 0) throw Object.assign(new Error(`STL file for ${id} is unavailable`), { status: 409 });
+          if (!(await hasStl(id))) throw Object.assign(new Error(`STL file for ${id} is unavailable`), { status: 409 });
         }
         const params = new URLSearchParams({
           mode: "payment", success_url: `${origin}/order.html?session_id={CHECKOUT_SESSION_ID}`,
