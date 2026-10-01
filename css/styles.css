@@ -248,7 +248,7 @@ img {
   gap: 8px 18px;
 }
 
-.digital-files-trigger {
+.footer-popover-trigger {
   min-height: 40px;
   padding: 0;
   color: var(--muted);
@@ -258,12 +258,12 @@ img {
   text-underline-offset: 3px;
 }
 
-.digital-files-trigger:hover {
+.footer-popover-trigger:hover {
   color: #373c44;
   text-decoration-color: currentColor;
 }
 
-.digital-files-popover {
+.footer-popover {
   position: fixed;
   inset: 0;
   width: min(480px, calc(100vw - 32px));
@@ -279,24 +279,24 @@ img {
   font-family: inherit;
 }
 
-.digital-files-popover::backdrop {
+.footer-popover::backdrop {
   background: rgb(24 28 24 / 22%);
 }
 
-.digital-files-heading {
+.footer-popover-heading {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
 }
 
-.digital-files-heading h2 {
+.footer-popover-heading h2 {
   font-size: 22px;
   font-weight: 500;
   letter-spacing: -.03em;
 }
 
-.digital-files-close {
+.footer-popover-close {
   flex: none;
   width: 36px;
   height: 36px;
@@ -305,11 +305,18 @@ img {
   line-height: 1;
 }
 
-.digital-files-popover p {
+.footer-popover p {
   margin-top: 16px;
   color: #5f625c;
   font-size: 13px;
   line-height: 1.6;
+}
+
+.footer-popover-link {
+  color: #3e5f49;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
 }
 
 .product-grid {
@@ -773,7 +780,7 @@ dialog::backdrop {
     --gutter: 16px;
   }
 
-  .digital-files-popover {
+  .footer-popover {
     padding: 20px;
   }
 
