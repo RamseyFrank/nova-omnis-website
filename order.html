@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="referrer" content="no-referrer">
     <title>Your STL downloads | Nova Omnis</title>
-    <link rel="stylesheet" href="css/styles.css?v=20261001-3">
+    <link rel="stylesheet" href="css/styles.css?v=20261001-4">
     <script src="js/order.js?v=20261001-4" defer></script>
   </head>
   <body>
@@ -49,7 +49,19 @@
 
     <footer class="site-footer page-width order-site-footer">
       <div class="site-footer-content">
-        <p class="site-footer-copyright">&copy; 2026 Nova Omnis</p>
+        <div class="site-footer-meta">
+          <p class="site-footer-copyright">&copy; 2026 Nova Omnis</p>
+          <button class="digital-files-trigger" type="button" popovertarget="digital-files-info">Digital Files</button>
+        </div>
+        <div class="digital-files-popover" id="digital-files-info" popover role="dialog" aria-labelledby="digital-files-title">
+          <div class="digital-files-heading">
+            <h2 id="digital-files-title">Digital Files</h2>
+            <button class="digital-files-close" type="button" popovertarget="digital-files-info" popovertargetaction="hide" aria-label="Close Digital Files">&times;</button>
+          </div>
+          <p>All Nova Omnis products are original digital 3D files made in Blender for creative, digital, and fabrication-related use. No physical product will be shipped.</p>
+          <p>Files are provided as-is, and results may vary depending on software, hardware, equipment, and settings. Please ensure the file is suitable for your intended use before purchasing.</p>
+          <p>Digital purchases are non-refundable once access has been provided.</p>
+        </div>
         <span>Digital models, ready to make.</span>
       </div>
     </footer>

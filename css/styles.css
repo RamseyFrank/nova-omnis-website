@@ -241,6 +241,77 @@ img {
   font-size: 12px;
 }
 
+.site-footer-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+
+.digital-files-trigger {
+  min-height: 40px;
+  padding: 0;
+  color: var(--muted);
+  font-size: 12px;
+  text-decoration: underline;
+  text-decoration-color: #c4c7bf;
+  text-underline-offset: 3px;
+}
+
+.digital-files-trigger:hover {
+  color: #373c44;
+  text-decoration-color: currentColor;
+}
+
+.digital-files-popover {
+  position: fixed;
+  inset: 0;
+  width: min(480px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  padding: 28px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-media);
+  color: #242622;
+  background: var(--panel);
+  box-shadow: 0 20px 70px rgb(36 38 34 / 16%);
+  font-family: inherit;
+}
+
+.digital-files-popover::backdrop {
+  background: rgb(24 28 24 / 22%);
+}
+
+.digital-files-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.digital-files-heading h2 {
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -.03em;
+}
+
+.digital-files-close {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  color: var(--muted);
+  font-size: 25px;
+  line-height: 1;
+}
+
+.digital-files-popover p {
+  margin-top: 16px;
+  color: #5f625c;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
 .product-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -490,6 +561,21 @@ dialog::backdrop {
   font-size: 12px;
 }
 
+.detail-status:empty {
+  min-height: 0;
+  margin-top: 0;
+}
+
+.purchase-notice {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.detail-info .purchase-notice {
+  margin-top: 12px;
+}
+
 .cart-dialog {
   position: fixed;
   inset: 0 0 0 auto;
@@ -627,6 +713,11 @@ dialog::backdrop {
   text-align: center;
 }
 
+.cart-purchase-notice {
+  margin-top: 12px;
+  text-align: center;
+}
+
 @media (min-width: 761px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .product-card {
     transition: transform 200ms ease, box-shadow 200ms ease;
@@ -680,6 +771,10 @@ dialog::backdrop {
 @media (max-width: 480px) {
   :root {
     --gutter: 16px;
+  }
+
+  .digital-files-popover {
+    padding: 20px;
   }
 
   .site-header {
