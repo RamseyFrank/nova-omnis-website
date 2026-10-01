@@ -22,11 +22,13 @@ from a private Cloudflare R2 bucket. STL files are never served as public static
    Record its Access Key ID and Secret Access Key securely; Cloudflare only shows the
    secret once. Find the account ID in the R2 dashboard. The Node app uses these
    credentials to read objects; buyers never receive them or a public R2 URL.
-3. Create a Stripe account and get its secret key from the Stripe dashboard. Use a
-   test key while testing. Keep the key on the server; never put it in HTML or JS.
+3. Create a Stripe account and, in test mode, create a restricted API key with
+   **Checkout Sessions: Write** permission (which also permits reads). A standard
+   test secret key works too. Keep the key on the server; never put it in HTML or JS.
 4. Configure these environment variables on the host:
 
-   - `STRIPE_SECRET_KEY`: Stripe secret key, beginning `sk_test_` or `sk_live_`.
+   - `STRIPE_SECRET_KEY`: Stripe server-side key. A restricted key begins `rk_test_`
+     or `rk_live_`; a standard secret key begins `sk_test_` or `sk_live_`.
    - `PUBLIC_BASE_URL`: the site's public origin, such as `https://example.com`.
    - `R2_ACCOUNT_ID`: Cloudflare account ID (32 hexadecimal characters).
    - `R2_BUCKET`: `nova-omnis-stl`.
@@ -34,6 +36,10 @@ from a private Cloudflare R2 bucket. STL files are never served as public static
    - `R2_SECRET_ACCESS_KEY`: R2 token's Secret Access Key.
    - `R2_JURISDICTION`: optional; set to `eu`, `us`, or `fedramp` only if the bucket
      was created in one of those jurisdictions. Otherwise leave it unset.
+   - `DOWNLOAD_LINK_HOURS`: optional; defaults to `24`. Paid order pages and
+     file downloads expire this many hours after the Stripe checkout was started.
+     Set a whole number from 1 to 8760. A buyer who takes time to complete
+     payment has less than this full period after payment.
    - `PORT`: optional; defaults to `3000`. Hosts usually set this automatically.
 
 5. Start with `node server.mjs` or `npm start`, then open the URL for that server.
@@ -42,7 +48,7 @@ from a private Cloudflare R2 bucket. STL files are never served as public static
 6. Test a purchase using Stripe test mode and a test card before switching to a
    live key. A paid order returns to `order.html` with download links. If payment
    is still processing, the page checks again for up to one minute. Save that
-   link: it allows repeat downloads and should be treated as private. The current
+   link: it allows repeat downloads until it expires and should be treated as private. The current
    implementation delivers files on that page; it does not email download links.
 
 ### Hostinger Business Web Hosting

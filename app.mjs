@@ -33,9 +33,13 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
   r2AccountId = process.env.R2_ACCOUNT_ID, r2Bucket = process.env.R2_BUCKET,
   r2AccessKeyId = process.env.R2_ACCESS_KEY_ID, r2SecretAccessKey = process.env.R2_SECRET_ACCESS_KEY,
   r2Jurisdiction = process.env.R2_JURISDICTION || "",
+  downloadLinkHours = Number(process.env.DOWNLOAD_LINK_HOURS ?? 24), now = () => Date.now(),
   fetchImpl = fetch, siteRoot = root } = {}) {
   if (!secretKey || !baseUrl) {
     throw new Error("Set STRIPE_SECRET_KEY and PUBLIC_BASE_URL before starting the server.");
+  }
+  if (!Number.isSafeInteger(downloadLinkHours) || downloadLinkHours < 1 || downloadLinkHours > 8760) {
+    throw new Error("DOWNLOAD_LINK_HOURS must be a whole number from 1 to 8760.");
   }
   const origin = new URL(baseUrl).origin;
   if (new URL(baseUrl).pathname !== "/" || !/^https?:$/.test(new URL(baseUrl).protocol)) {
@@ -68,6 +72,13 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
     if (session.id !== sessionId || session.mode !== "payment" || session.status !== "complete") {
       throw Object.assign(new Error("Payment is not complete"), { status: 403 });
     }
+    if (!Number.isSafeInteger(session.created) || session.created <= 0) {
+      throw Object.assign(new Error("Order link unavailable"), { status: 403 });
+    }
+    const expiresAt = session.created + downloadLinkHours * 3600;
+    if (now() >= expiresAt * 1000) {
+      throw Object.assign(new Error("Download link has expired"), { status: 410 });
+    }
     if (session.payment_status !== "paid") {
       if (allowPending && session.payment_status === "unpaid") return null;
       throw Object.assign(new Error("Payment is not complete"), { status: 403 });
@@ -76,7 +87,7 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
     if (!ids.length || ids.length > 20 || ids.some((id) => !idPattern.test(id)) || new Set(ids).size !== ids.length) {
       throw Object.assign(new Error("Order has invalid products"), { status: 403 });
     }
-    return ids;
+    return { ids, expiresAt };
   }
 
   async function handler(req, res) {
@@ -121,15 +132,16 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
         return sendJson(res, 200, { url: session.url });
       }
       if (req.method === "GET" && url.pathname === "/api/order") {
-        const ids = await paidOrder(url.searchParams.get("session_id"), true);
-        if (ids === null) return sendJson(res, 202, { status: "pending" });
+        const order = await paidOrder(url.searchParams.get("session_id"), true);
+        if (order === null) return sendJson(res, 202, { status: "pending" });
         const products = await catalog();
-        return sendJson(res, 200, { products: ids.map((id) => ({ id, name: products.find((product) => product.id === id)?.name || id })) });
+        return sendJson(res, 200, { products: order.ids.map((id) => ({ id, name: products.find((product) => product.id === id)?.name || id })),
+          expiresAt: new Date(order.expiresAt * 1000).toISOString() });
       }
       if (req.method === "GET" && url.pathname === "/api/download") {
         const id = url.searchParams.get("id");
-        const ids = await paidOrder(url.searchParams.get("session_id"));
-        if (!ids.includes(id)) throw Object.assign(new Error("This file is not in the order"), { status: 403 });
+        const order = await paidOrder(url.searchParams.get("session_id"));
+        if (!order.ids.includes(id)) throw Object.assign(new Error("This file is not in the order"), { status: 403 });
         const object = await r2.get(id);
         if (!object?.body) throw Object.assign(new Error("File unavailable"), { status: 404 });
         const length = object.headers.get("content-length");

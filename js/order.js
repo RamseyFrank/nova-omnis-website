@@ -2,6 +2,7 @@
 
 const status = document.querySelector("#order-status");
 const list = document.querySelector("#order-downloads");
+const help = document.querySelector("#order-help");
 const sessionId = new URLSearchParams(location.search).get("session_id");
 
 async function loadOrder() {
@@ -10,8 +11,9 @@ async function loadOrder() {
     return;
   }
   for (let attempt = 0; attempt < 12; attempt++) {
+    let response;
     try {
-      const response = await fetch(`/api/order?session_id=${encodeURIComponent(sessionId)}`, { cache: "no-store" });
+      response = await fetch(`/api/order?session_id=${encodeURIComponent(sessionId)}`, { cache: "no-store" });
       const order = await response.json();
       if (response.status === 202) {
         status.textContent = "Your payment is still processing. This page will check again shortly.";
@@ -29,9 +31,19 @@ async function loadOrder() {
       }
       list.hidden = false;
       status.textContent = "Payment confirmed. Your files are ready.";
+      help.textContent = `Download before ${new Date(order.expiresAt).toLocaleString()}. Keep this page link private.`;
+      const expirePage = () => {
+        list.hidden = true;
+        status.textContent = "This download link has expired.";
+        help.textContent = "This download link can no longer be used.";
+      };
+      const remaining = new Date(order.expiresAt).getTime() - Date.now();
+      if (remaining <= 0) expirePage();
+      else setTimeout(expirePage, remaining);
       return;
     } catch (error) {
       status.textContent = error.message || "Could not load your order. Please refresh and try again.";
+      if (response?.status === 410) help.textContent = "This download link can no longer be used.";
       return;
     }
   }
