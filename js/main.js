@@ -165,10 +165,12 @@ checkoutButton.addEventListener("click", async () => {
   checkoutButton.textContent = "OPENING CHECKOUT…";
   checkoutNote.textContent = "Connecting to Stripe…";
   try {
+    let email;
+    try { email = localStorage.getItem("novaomnis.checkoutEmail") || undefined; } catch { /* Storage may be unavailable. */ }
     const response = await fetch("/api/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productIds: [...cart] }),
+      body: JSON.stringify({ productIds: [...cart], email }),
     });
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || "Checkout could not start.");

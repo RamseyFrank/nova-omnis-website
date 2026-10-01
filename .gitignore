@@ -3,6 +3,7 @@ Thumbs.db
 .vscode/
 .env
 .env.*
+node_modules/
 *.stl
 
 # Keep original high-resolution product images local.

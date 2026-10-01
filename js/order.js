@@ -21,6 +21,9 @@ async function loadOrder() {
         continue;
       }
       if (!response.ok) throw new Error(order.error || "Could not load your order.");
+      if (order.email) {
+        try { localStorage.setItem("novaomnis.checkoutEmail", order.email); } catch { /* Storage may be unavailable. */ }
+      }
       for (const product of order.products) {
         const item = document.createElement("li");
         const link = document.createElement("a");

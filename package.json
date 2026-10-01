@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "description": "Nova Omnis static storefront and product pipeline",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "start": "node server.mjs",
     "product:add": "node scripts/products.mjs add",
@@ -11,5 +13,8 @@
     "catalog:check": "node scripts/products.mjs check",
     "test": "node --test",
     "check": "npm run catalog:check && npm test"
+  },
+  "dependencies": {
+    "nodemailer": "^10.0.13"
   }
 }

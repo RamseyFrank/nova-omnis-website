@@ -4,7 +4,7 @@ This repository contains the Nova Omnis website.
 
 The storefront uses static HTML, CSS, and JavaScript, plus a small Node.js server
 for Stripe Checkout and private STL downloads from Cloudflare R2. Node.js 22 or newer is required.
-There are no npm dependencies.
+Run `npm install` before starting the server.
 
 ## Checkout and STL delivery
 
@@ -29,6 +29,11 @@ from a private Cloudflare R2 bucket. STL files are never served as public static
 
    - `STRIPE_SECRET_KEY`: Stripe server-side key. A restricted key begins `rk_test_`
      or `rk_live_`; a standard secret key begins `sk_test_` or `sk_live_`.
+   - `STRIPE_WEBHOOK_SECRET`: Stripe webhook signing secret for this site's
+     `/api/stripe-webhook` endpoint, beginning `whsec_`.
+   - `GMAIL_USER`: full Gmail address that sends purchase emails.
+   - `GMAIL_APP_PASSWORD`: Gmail app password for that address. Keep it in
+     Hostinger's environment settings, never in Git or a website file.
    - `PUBLIC_BASE_URL`: the site's public origin, such as `https://example.com`.
    - `R2_ACCOUNT_ID`: Cloudflare account ID (32 hexadecimal characters).
    - `R2_BUCKET`: `nova-omnis-stl`.
@@ -42,21 +47,32 @@ from a private Cloudflare R2 bucket. STL files are never served as public static
      payment has less than this full period after payment.
    - `PORT`: optional; defaults to `3000`. Hosts usually set this automatically.
 
-5. Start with `node server.mjs` or `npm start`, then open the URL for that server.
+5. In Stripe, create a webhook endpoint at `<PUBLIC_BASE_URL>/api/stripe-webhook`
+   for `checkout.session.completed` and `checkout.session.async_payment_succeeded`.
+   Copy its signing secret into `STRIPE_WEBHOOK_SECRET`. Gmail requires two step
+   verification to create an app password. Put the sender address and app password
+   in `GMAIL_USER` and `GMAIL_APP_PASSWORD` on Hostinger. Test and live Stripe
+   modes use separate webhook endpoints and signing secrets.
+6. Start with `node server.mjs` or `npm start`, then open the URL for that server.
    Checkout requires this server; a static file host alone cannot protect the files
    or call Stripe with a secret key.
-6. Test a purchase using Stripe test mode and a test card before switching to a
+7. Test a purchase using Stripe test mode and a test card before switching to a
    live key. A paid order returns to `order.html` with download links. If payment
    is still processing, the page checks again for up to one minute. Save that
    link: it allows repeat downloads until it expires and should be treated as private. The current
-   implementation delivers files on that page; it does not email download links.
+   implementation also emails separate links for each purchased file after Stripe
+   confirms payment. Those links have the same 24-hour deadline as the order page.
+   After a paid order, the browser remembers the checkout email locally and
+   prefills it on later purchases from the same browser. Stripe still displays
+   the contact field; private browsing or clearing site data removes the saved email.
 
 ### Hostinger Business Web Hosting
 
 Your Business plan supports Node.js web apps. In hPanel, choose **Add Website →
 Deploy Web App** and deploy this project from GitHub or a ZIP. Choose Node.js 22
 and **Other** if asked for a framework; set the entry file to `server.mjs` or the
-start command to `npm start`. This project has no build command.
+start command to `npm start`. This project has no build command, but npm
+dependencies must be installed during deployment.
 
 R2 storage is independent of both the temporary and final Hostinger websites. Upload
 the objects directly to the private R2 bucket and set the environment variables
@@ -77,7 +93,10 @@ and existing backups may be lost. Back those up and review the exact hPanel
 confirmation first. Deleting the old website is another way to release the
 domain, but it removes that website's files and settings. Change
 `PUBLIC_BASE_URL` to `https://novaomnis.com` in the Node.js app settings. The
-checkout button checks `/api/health`, so it remains disabled until every
+Stripe webhook URL must also be changed to `https://novaomnis.com/api/stripe-webhook`;
+if you create a new webhook endpoint, use its new signing secret in Hostinger.
+Previously emailed links to the temporary domain remain tied to that domain
+until they expire. The checkout button checks `/api/health`, so it remains disabled until every
 published product has a private R2 object.
 Use a Stripe test key for the first purchase test on the live domain; replace it
 with a live key after payment and download succeed in test mode.
@@ -87,7 +106,7 @@ with a live key after payment and download succeed in test mode.
 Product details live in `content/products/<id>.json`. The pipeline validates these
 files and their images, then generates `data/products.json` for the storefront.
 **Edit the source files, not the generated catalog.** Node.js 22 or newer is needed
-for these commands; no `npm install` is required. The catalog is served by the
+for these commands. Run `npm install` once first. The catalog is served by the
 Node.js app after deployment.
 
 ### Add a product
