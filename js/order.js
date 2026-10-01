@@ -49,6 +49,15 @@ async function loadOrder() {
         const action = document.createElement("span");
         fileIcon.className = "order-download-icon";
         fileIcon.textContent = "STL";
+        if (product.image) {
+          const image = document.createElement("img");
+          image.src = product.image;
+          image.alt = "";
+          image.decoding = "async";
+          image.loading = "lazy";
+          image.addEventListener("error", () => image.remove(), { once: true });
+          fileIcon.append(image);
+        }
         fileDetails.className = "order-download-details";
         fileName.className = "order-download-name";
         fileName.textContent = product.name;

@@ -223,7 +223,9 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
         const order = await paidOrder(url.searchParams.get("session_id"), true);
         if (order === null) return sendJson(res, 202, { status: "pending" });
         const products = await catalog();
-        return sendJson(res, 200, { products: order.ids.map((id) => ({ id, name: products.find((product) => product.id === id)?.name || id })),
+        const productsById = new Map(products.map((product) => [product.id, product]));
+        return sendJson(res, 200, { products: order.ids.map((id) => ({ id, name: productsById.get(id)?.name || id,
+          image: productsById.get(id)?.images?.[0] || null })),
           expiresAt: new Date(order.expiresAt * 1000).toISOString(),
           email: order.email });
       }

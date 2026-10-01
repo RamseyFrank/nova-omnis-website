@@ -12,7 +12,8 @@ test("checkout prices come from the server and paid sessions gate STL downloads"
   const siteRoot = path.join(workspace, "site");
   await mkdir(path.join(siteRoot, "data"), { recursive: true });
   await writeFile(path.join(siteRoot, "data/products.json"), JSON.stringify([
-    { id: "marine", name: "Marine", price: 5 }, { id: "other", name: "Other", price: 7 },
+    { id: "marine", name: "Marine", price: 5, images: ["assets/images/products/marine/01.webp"] },
+    { id: "other", name: "Other", price: 7 },
   ]));
   const calls = [];
   let paid = false;
@@ -77,7 +78,7 @@ test("checkout prices come from the server and paid sessions gate STL downloads"
   assert.equal((await fetch(`${base}/api/download?session_id=cs_test_123&id=marine`)).status, 403);
   paid = true;
   const order = await fetch(`${base}/api/order?session_id=cs_test_123`);
-  assert.deepEqual(await order.json(), { products: [{ id: "marine", name: "Marine" }],
+  assert.deepEqual(await order.json(), { products: [{ id: "marine", name: "Marine", image: "assets/images/products/marine/01.webp" }],
     expiresAt: new Date((created + 24 * 3600) * 1000).toISOString(), email: "buyer@example.com" });
   const download = await fetch(`${base}/api/download?session_id=cs_test_123&id=marine`);
   assert.equal(download.status, 200);

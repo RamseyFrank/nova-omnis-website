@@ -886,7 +886,7 @@ dialog::backdrop {
   display: flex;
   align-items: center;
   gap: 18px;
-  min-height: 94px;
+  min-height: 110px;
   padding: 18px 36px;
 }
 
@@ -895,17 +895,27 @@ dialog::backdrop {
 }
 
 .order-download-icon {
+  position: relative;
   display: grid;
   flex: none;
   place-items: center;
-  width: 52px;
-  height: 52px;
+  width: 68px;
+  height: 68px;
+  overflow: hidden;
   border-radius: 12px;
   color: #55715e;
   background: #eaf0e8;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: .05em;
+}
+
+.order-download-icon img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .order-download-details {
@@ -1022,13 +1032,13 @@ dialog::backdrop {
 
   .order-download-link {
     gap: 12px;
-    min-height: 86px;
+    min-height: 96px;
     padding: 16px 20px;
   }
 
   .order-download-icon {
-    width: 44px;
-    height: 44px;
+    width: 58px;
+    height: 58px;
   }
 
   .order-download-action {
