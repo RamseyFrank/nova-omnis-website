@@ -5,17 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="referrer" content="no-referrer">
     <title>Your STL downloads | Nova Omnis</title>
-    <link rel="stylesheet" href="css/styles.css?v=20261001-1">
-    <script src="js/order.js?v=20261001-2" defer></script>
+    <link rel="stylesheet" href="css/styles.css?v=20261001-2">
+    <script src="js/order.js?v=20261001-3" defer></script>
   </head>
   <body>
-    <header class="site-header page-width"><a class="order-home" href="/">novaomnis</a></header>
-    <main class="order-page page-width">
-      <h1>Your STL downloads</h1>
-      <p id="order-status" role="status">Checking your payment…</p>
-      <ul id="order-downloads" class="order-downloads" hidden></ul>
-      <p id="order-help" class="order-help">This download link is valid for up to 24 hours after checkout starts. Keep it private.</p>
-      <a href="/">Continue browsing</a>
+    <header class="site-header page-width order-site-header">
+      <a class="wordmark" href="/" aria-label="novaomnis home">novaomnis</a>
+      <a class="order-header-link" href="/">Back to shop <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main class="order-page page-width" id="order-page">
+      <section class="order-intro" aria-labelledby="order-title">
+        <div class="order-confirmation-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m8 16 5.5 5.5L24 11" />
+          </svg>
+        </div>
+        <p class="order-eyebrow" id="order-eyebrow">DIGITAL DELIVERY</p>
+        <h1 id="order-title">Preparing your files.</h1>
+        <p class="order-status" id="order-status" role="status">Checking your payment…</p>
+      </section>
+
+      <section class="order-panel" aria-labelledby="order-download-heading">
+        <div class="order-panel-header">
+          <div>
+            <p class="order-panel-kicker">YOUR ORDER</p>
+            <h2 id="order-download-heading">STL downloads</h2>
+          </div>
+          <span class="order-file-type">DIGITAL FILES</span>
+        </div>
+        <p class="order-empty" id="order-empty">Your files will appear here once payment is confirmed.</p>
+        <ul id="order-downloads" class="order-downloads" aria-label="Purchased STL files" hidden></ul>
+        <div class="order-panel-footer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" />
+          </svg>
+          <p id="order-help" class="order-help">Your download link is valid for up to 24 hours after checkout starts. Keep this page link private.</p>
+        </div>
+      </section>
+
+      <a class="order-continue" href="/">Continue browsing <span aria-hidden="true">↗</span></a>
     </main>
+
+    <footer class="site-footer page-width order-site-footer">
+      <div class="site-footer-content">
+        <p class="site-footer-copyright">&copy; 2026 Nova Omnis</p>
+        <span>Digital models, ready to make.</span>
+      </div>
+    </footer>
   </body>
 </html>
