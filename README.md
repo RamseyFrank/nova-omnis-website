@@ -12,6 +12,8 @@ The server creates a Stripe hosted Checkout Session using prices from the genera
 catalog. On return, the order page asks Stripe whether that session was paid before
 showing download links. Every download checks payment again, then streams the object
 from a private Cloudflare R2 bucket. STL files are never served as public static assets.
+Checkout accepts card payments so a delayed payment method cannot complete after
+the 24-hour download window has already expired.
 
 1. In Cloudflare, use the `nova-omnis-stl` R2 bucket for the STL files. Keep its public development
    URL disabled and do not connect a public custom domain. Upload each product's
@@ -78,8 +80,9 @@ R2 storage is independent of both the temporary and final Hostinger websites. Up
 the objects directly to the private R2 bucket and set the environment variables
 above in the Node.js app deployment settings. After uploading the objects, check
 `https://novaomnis.com/api/health` for `{"checkout":true}`. If checkout is
-`false`, verify that every published product ID has a nonempty `<product-id>.stl`
-at the bucket root and that the R2 token can read it. Complete a Stripe test
+`false`, check the `missing` array for absent or empty `<product-id>.stl` files
+and the `configuration` array for missing webhook or purchase email settings.
+The R2 token must also be able to read each object. Complete a Stripe test
 purchase and open a download before switching to the live key.
 
 For `novaomnis.com`, first deploy the Node.js app on a temporary Hostinger
@@ -97,7 +100,7 @@ Stripe webhook URL must also be changed to `https://novaomnis.com/api/stripe-web
 if you create a new webhook endpoint, use its new signing secret in Hostinger.
 Previously emailed links to the temporary domain remain tied to that domain
 until they expire. The checkout button checks `/api/health`, so it remains disabled until every
-published product has a private R2 object.
+published product has a private R2 object and webhook and email settings are present.
 Use a Stripe test key for the first purchase test on the live domain; replace it
 with a live key after payment and download succeed in test mode.
 

@@ -40,7 +40,7 @@ test("checkout prices come from the server and paid sessions gate STL downloads"
     return new Response("solid marine\nendsolid marine\n");
   };
   const server = createApp({ secretKey: "sk_test_example", baseUrl: "http://127.0.0.1", siteRoot, fetchImpl,
-    now: () => currentTime, webhookSecret: "whsec_example", deliverEmail: async (message) => {
+    now: () => currentTime, webhookSecret: "whsec_example", emailConfigured: true, deliverEmail: async (message) => {
       if (failDelivery) throw new Error("SMTP unavailable");
       delivered.push(message);
     },
@@ -55,6 +55,7 @@ test("checkout prices come from the server and paid sessions gate STL downloads"
   assert.equal((await checkout.json()).url, "https://checkout.stripe.com/test-session");
   const form = new URLSearchParams(calls.find((call) => call.options.method === "POST").options.body);
   assert.equal(form.get("line_items[0][price_data][unit_amount]"), "500");
+  assert.equal(form.get("payment_method_types[0]"), "card");
   assert.equal(form.get("metadata[product_ids]"), "marine");
   assert.equal(form.get("customer_email"), null);
   const repeatCheckout = await fetch(`${base}/api/checkout`, { method: "POST", headers: { "Content-Type": "application/json" },
@@ -62,6 +63,12 @@ test("checkout prices come from the server and paid sessions gate STL downloads"
   assert.equal(repeatCheckout.status, 200);
   const repeatForm = new URLSearchParams(calls.filter((call) => call.options.method === "POST").at(-1).options.body);
   assert.equal(repeatForm.get("customer_email"), "buyer@example.com");
+  assert.equal((await fetch(`${base}/api/checkout`, { method: "POST",
+    headers: { "Content-Type": "application/json", Origin: "http://www.127.0.0.1" },
+    body: JSON.stringify({ productIds: ["marine"] }) })).status, 200);
+  assert.equal((await fetch(`${base}/api/checkout`, { method: "POST",
+    headers: { "Content-Type": "application/json", Origin: "http://other.example" },
+    body: JSON.stringify({ productIds: ["marine"] }) })).status, 403);
   assert.equal((await fetch(`${base}/api/checkout`, { method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ productIds: ["marine"], email: "invalid" }) })).status, 400);
   const pendingOrder = await fetch(`${base}/api/order?session_id=cs_test_123`);
@@ -107,4 +114,32 @@ test("checkout prices come from the server and paid sessions gate STL downloads"
   assert.equal((await fetch(`${base}/content/products/marine.json`)).status, 404);
   assert.equal((await fetch(`${base}/api/checkout`, { method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ productIds: ["marine", "other"] }) })).status, 409);
+});
+
+test("checkout stays unavailable until webhook and email delivery are configured", async (t) => {
+  const workspace = await mkdtemp(path.join(tmpdir(), "nova-readiness-"));
+  t.after(() => rm(workspace, { recursive: true, force: true }));
+  await mkdir(path.join(workspace, "data"));
+  await writeFile(path.join(workspace, "data/products.json"), JSON.stringify([
+    { id: "marine", name: "Marine", price: 5 },
+  ]));
+  const fetchImpl = async (url, options) => {
+    assert.equal(options.method, "HEAD");
+    assert.match(url, /\/marine\.stl$/);
+    return new Response(null, { headers: { "content-length": "29" } });
+  };
+  const server = createApp({ secretKey: "sk_test_example", baseUrl: "http://127.0.0.1",
+    siteRoot: workspace, fetchImpl, webhookSecret: "", emailConfigured: false,
+    r2AccountId: "a".repeat(32), r2Bucket: "nova-private", r2AccessKeyId: "test-access",
+    r2SecretAccessKey: "test-secret" });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  t.after(() => new Promise((resolve) => server.close(resolve)));
+  const base = `http://127.0.0.1:${server.address().port}`;
+  assert.deepEqual(await (await fetch(`${base}/api/health`)).json(), {
+    checkout: false, missing: [], configuration: ["STRIPE_WEBHOOK_SECRET", "GMAIL_USER/GMAIL_APP_PASSWORD"],
+  });
+  const checkout = await fetch(`${base}/api/checkout`, { method: "POST",
+    headers: { "Content-Type": "application/json" }, body: JSON.stringify({ productIds: ["marine"] }) });
+  assert.equal(checkout.status, 503);
+  assert.deepEqual(await checkout.json(), { error: "Checkout is not ready" });
 });

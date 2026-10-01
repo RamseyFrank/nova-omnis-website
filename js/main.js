@@ -172,13 +172,14 @@ checkoutButton.addEventListener("click", async () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ productIds: [...cart], email }),
     });
-    const result = await response.json();
+    const result = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(result.error || "Checkout could not start.");
+    if (typeof result.url !== "string") throw new Error("Checkout could not start. Please try again.");
     window.location.assign(result.url);
   } catch (error) {
     checkoutNote.textContent = error.message || "Checkout could not start. Please try again.";
     checkoutPending = false;
-    checkoutButton.disabled = cart.size === 0;
+    checkoutButton.disabled = cart.size === 0 || !checkoutReady;
     checkoutButton.textContent = "CHECKOUT";
   }
 });

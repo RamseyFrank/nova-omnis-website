@@ -61,6 +61,7 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
   r2Jurisdiction = process.env.R2_JURISDICTION || "",
   downloadLinkHours = Number(process.env.DOWNLOAD_LINK_HOURS ?? 24), now = () => Date.now(),
   webhookSecret = process.env.STRIPE_WEBHOOK_SECRET, deliverEmail = sendDownloadEmail,
+  emailConfigured = Boolean(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD),
   fetchImpl = fetch, siteRoot = root } = {}) {
   if (!secretKey || !baseUrl) {
     throw new Error("Set STRIPE_SECRET_KEY and PUBLIC_BASE_URL before starting the server.");
@@ -72,6 +73,8 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
   if (new URL(baseUrl).pathname !== "/" || !/^https?:$/.test(new URL(baseUrl).protocol)) {
     throw new Error("PUBLIC_BASE_URL must be an HTTP(S) origin without a path.");
   }
+  const originUrl = new URL(origin);
+  const allowedCheckoutOrigins = new Set([origin, `${originUrl.protocol}//www.${originUrl.host}`]);
   const r2 = createR2Client({ accountId: r2AccountId, bucket: r2Bucket, accessKeyId: r2AccessKeyId,
     secretAccessKey: r2SecretAccessKey, jurisdiction: r2Jurisdiction, fetchImpl });
   const emailDeliveries = new Map();
@@ -169,11 +172,20 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
         const products = await catalog();
         const filesReady = await Promise.all(products.map((product) => hasStl(product.id)));
         const missing = products.filter((_, index) => !filesReady[index]).map((product) => `${product.id}.stl`);
-        return sendJson(res, 200, missing.length || !products.length
-          ? { checkout: false, missing } : { checkout: true });
+        const configuration = [
+          ...(!webhookSecret ? ["STRIPE_WEBHOOK_SECRET"] : []),
+          ...(!emailConfigured ? ["GMAIL_USER/GMAIL_APP_PASSWORD"] : []),
+        ];
+        return sendJson(res, 200, missing.length || !products.length || configuration.length
+          ? { checkout: false, missing, ...(configuration.length ? { configuration } : {}) } : { checkout: true });
       }
       if (req.method === "POST" && url.pathname === "/api/checkout") {
-        if (req.headers.origin && req.headers.origin !== origin) throw Object.assign(new Error("Invalid origin"), { status: 403 });
+        if (!webhookSecret || !emailConfigured) {
+          throw Object.assign(new Error("Checkout is not ready"), { status: 503 });
+        }
+        if (req.headers.origin && !allowedCheckoutOrigins.has(req.headers.origin)) {
+          throw Object.assign(new Error("Invalid origin"), { status: 403 });
+        }
         const body = await readBody(req);
         const ids = body?.productIds;
         const email = body?.email;
@@ -192,7 +204,8 @@ export function createApp({ secretKey = process.env.STRIPE_SECRET_KEY, baseUrl =
           if (!(await hasStl(id))) throw Object.assign(new Error(`STL file for ${id} is unavailable`), { status: 409 });
         }
         const params = new URLSearchParams({
-          mode: "payment", success_url: `${origin}/order.html?session_id={CHECKOUT_SESSION_ID}`,
+          mode: "payment", "payment_method_types[0]": "card",
+          success_url: `${origin}/order.html?session_id={CHECKOUT_SESSION_ID}`,
           cancel_url: `${origin}/`, "metadata[product_ids]": ids.join(","),
         });
         if (email) params.set("customer_email", email);
