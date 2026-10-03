@@ -190,7 +190,8 @@ Image validation checks filenames and files, not image decoding or visual qualit
 
 The transparent SVG at `assets/images/novaomnis-logo.svg` is centered in the
 shop and order page headers and links to the shop home page. The animated
-`novaomnis` name remains at the left of each header.
+`novaomnis` name remains at the left of each header. Both pages also use the
+same SVG as their favicon.
 
 The lowercase `novaomnis` wordmark loads Bauhaus Bold (`bauhaub`) from
 the supplied `static.wfonts.com` TrueType URL in the headers and shop footer. It uses the
