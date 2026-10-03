@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="84.436409mm"
+   height="78.096771mm"
+   viewBox="0 0 84.436413 78.096767"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   sodipodi:docname="novaomnis_logo.svg"
+   inkscape:export-filename="novaomnis_logo.png"
+   inkscape:export-xdpi="260.09601"
+   inkscape:export-ydpi="260.09601"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.87081696"
+     inkscape:cx="35.598755"
+     inkscape:cy="374.93528"
+     inkscape:window-width="3440"
+     inkscape:window-height="1364"
+     inkscape:window-x="-30920"
+     inkscape:window-y="-32000"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     showguides="true"
+     inkscape:export-bgcolor="#ffffff00">
+    <sodipodi:guide
+       position="-65.030141,87.647472"
+       orientation="1,0"
+       id="guide11"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="-165.03015,187.64748"
+       orientation="0,-1"
+       id="guide12"
+       inkscape:locked="false" />
+    <inkscape:page
+       x="5.9223409e-15"
+       y="7.3696361e-16"
+       width="84.436417"
+       height="78.096771"
+       id="page1"
+       margin="0"
+       bleed="0" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect7"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,4.2525878,0,1 @ F,0,1,1,0,4.2525878,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,1,1,0,4.2525878,0,1 @ F,0,1,1,0,4.2525878,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(108.46841,-39.138166)">
+    <path
+       id="path1"
+       style="opacity:1;fill:#a8bdf8;fill-opacity:1;stroke:none;stroke-width:3.54129;stroke-dasharray:none;stroke-opacity:0"
+       d="m 39.384955,10.313266 c -12.426414,4e-5 -22.499885,10.073455 -22.499885,22.499885 0,0.0402 -1.83e-4,0.0804 0,0.120504 1.27e-4,0.02784 3.73e-4,9.155731 6.4e-4,14.748301 1.13e-4,2.348637 1.904307,4.252584 4.252947,4.252584 h 9.109653 c 2.34864,0 4.252553,-1.90395 4.252556,-4.252592 5e-6,-5.576147 6e-5,-14.658779 3.2e-5,-14.668068 -1.5e-5,-2.697397 2.18666,-4.884072 4.884057,-4.884058 2.697397,-1.5e-5 4.884073,2.186661 4.884058,4.884058 v 9.98e-4 c 0,0.12077 3.1e-5,9.125503 2.8e-5,14.667074 0,2.34864 1.90392,4.252588 4.25256,4.252588 h 9.109653 c 2.34864,0 4.252815,-1.903952 4.252944,-4.252595 3.06e-4,-5.592575 6.43e-4,-14.720465 6.43e-4,-14.74829 2.37e-4,-0.0401 0,-0.0803 0,-0.120504 0,-12.42643 -10.073468,-22.499845 -22.499886,-22.499885 z"
+       transform="matrix(1.8763667,0,0,1.8763667,-140.15083,19.786699)"
+       sodipodi:nodetypes="cssccccsscccsc"
+       inkscape:path-effect="#path-effect7"
+       inkscape:original-d="m 39.384955,10.313266 c -12.426414,4e-5 -22.499885,10.073455 -22.499885,22.499885 0,0.0402 -1.83e-4,0.0804 0,0.120504 1.83e-4,0.0401 6.12e-4,18.960805 9.99e-4,19.000885 h 17.614829 c -9.1e-5,-0.0134 4e-5,-18.90726 0,-18.92066 -1.5e-5,-2.697397 2.18666,-4.884072 4.884057,-4.884058 2.697397,-1.5e-5 4.884073,2.186661 4.884058,4.884058 v 9.98e-4 c 0,0.174547 6.4e-5,18.906315 0,18.919662 h 17.614829 c 3e-4,-0.0401 9.99e-4,-18.960805 9.99e-4,-19.000885 2.37e-4,-0.0401 0,-0.0803 0,-0.120504 0,-12.42643 -10.073468,-22.499845 -22.499886,-22.499885 z"
+       inkscape:export-filename="novaomnis_logo_alpha"
+       inkscape:export-xdpi="260.09601"
+       inkscape:export-ydpi="260.09601" />
+  </g>
+</svg>

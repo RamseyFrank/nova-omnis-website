@@ -13,7 +13,7 @@ const root = fileURLToPath(new URL("./", import.meta.url));
 const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const sessionPattern = /^cs_(?:test_|live_)?[A-Za-z0-9]+$/;
 const emailPattern = /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$/;
-const publicFiles = new Set(["/", "/index.html", "/order.html", "/js/main.js", "/js/order.js", "/css/styles.css", "/data/products.json", "/assets/images/novaomnis-logo.svg"]);
+const publicFiles = new Set(["/", "/index.html", "/order.html", "/js/main.js", "/js/order.js", "/css/styles.css", "/data/products.json", "/assets/images/novaomnis-logo.svg", "/assets/images/novaomnis-favicon.svg"]);
 const imagePath = /^\/assets\/images\/products\/[a-z0-9-]+\/[a-z0-9._-]+\.(?:webp|png|jpe?g|avif)$/;
 const fontPath = /^\/assets\/fonts\/satoshi\/Satoshi-(?:Regular|Medium|Bold)\.woff2$/;
 const types = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".json": "application/json; charset=utf-8", ".svg": "image/svg+xml", ".webp": "image/webp", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".avif": "image/avif" };
