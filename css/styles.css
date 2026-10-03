@@ -146,8 +146,24 @@ img {
   min-height: 112px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 24px;
+}
+
+.site-logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 80px;
+}
+
+.site-logo img {
+  width: auto;
+  height: 72px;
 }
 
 @supports ((backdrop-filter: blur(16px)) or (-webkit-backdrop-filter: blur(16px))) {
@@ -761,6 +777,14 @@ dialog::backdrop {
     min-height: 88px;
   }
 
+  .site-logo {
+    min-height: 64px;
+  }
+
+  .site-logo img {
+    height: 56px;
+  }
+
   .product-grid {
     row-gap: 32px;
   }
@@ -1100,10 +1124,6 @@ dialog::backdrop {
 @media (max-width: 600px) {
   .order-site-header {
     min-height: 76px;
-  }
-
-  .order-site-header .wordmark {
-    font-size: 25px;
   }
 
   .order-page {

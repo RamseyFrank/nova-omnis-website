@@ -186,13 +186,16 @@ Drafts may omit images and use `null` for the price; other fields are still
 validated. Unknown fields and invalid image references are rejected to catch typos.
 Image validation checks filenames and files, not image decoding or visual quality.
 
-## Wordmark font
+## Header logo and footer wordmark
+
+The transparent SVG at `assets/images/novaomnis-logo.svg` is centered in the
+shop and order page headers and links to the shop home page.
 
 The lowercase `novaomnis` wordmark loads Bauhaus Bold (`bauhaub`) from
-the supplied `static.wfonts.com` TrueType URL. It uses a 32px desktop size, smaller
-sizes on narrow screens, and the color `#373c44`. While the font loads, or if the
+the supplied `static.wfonts.com` TrueType URL in the shop footer. It uses the
+color `#373c44`. While the font loads, or if the
 remote service is unavailable, the wordmark uses the system font fallback.
-On page entry, a single staggered color wave passes through the letters using
+When the footer enters view, a single staggered color wave passes through the letters using
 the product-background palette, then returns to the normal wordmark color.
 The animation is disabled for reduced-motion preferences and forced-color mode.
 

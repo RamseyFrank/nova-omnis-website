@@ -29,4 +29,8 @@ test("Hostinger-style module import starts the HTTP server", async (t) => {
   const response = await fetch(`http://127.0.0.1:${port}/`);
   assert.equal(response.status, 200);
   assert.match(await response.text(), /Nova Omnis/);
+  const logo = await fetch(`http://127.0.0.1:${port}/assets/images/novaomnis-logo.svg`);
+  assert.equal(logo.status, 200);
+  assert.equal(logo.headers.get("content-type"), "image/svg+xml");
+  assert.match(await logo.text(), /<svg/);
 });
